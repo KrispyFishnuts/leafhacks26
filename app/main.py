@@ -3,6 +3,7 @@ from typing import List, Optional
 
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException, Depends, Header
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from vertexai.generative_models import Part, GenerationConfig
 
@@ -205,3 +206,6 @@ def history(user_id: int = Depends(get_current_user_id)):
         }
     finally:
         db.close()
+
+
+app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
