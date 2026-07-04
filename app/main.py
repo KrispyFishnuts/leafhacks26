@@ -5,6 +5,7 @@ from vertexai.generative_models import Part, GenerationConfig
 
 from app.prompts import MARKING_PROMPT_TEMPLATE
 from app.services.vertex_client import get_model
+from app.services.vision_client import extract_text
 
 app = FastAPI(title="LeafHacks26 - AI Exam Marker")
 
@@ -15,7 +16,6 @@ model = get_model()
 def health():
     return {"status": "ok"}
 
-
 @app.post("/mark")
 async def mark_answer(
     question: str = Form(...),
@@ -25,15 +25,17 @@ async def mark_answer(
 ):
     """
     Accepts a photo of a handwritten exam answer plus a mark scheme,
-    and returns a score + per-criterion feedback using Gemini.
+    runs OCR via Cloud Vision, then sends both the OCR transcription
+    and the original image to Gemini for marking.
     """
     image_bytes = await image.read()
+    extracted_text = extract_text(image_bytes)
 
     prompt = MARKING_PROMPT_TEMPLATE.format(
         question=question,
         mark_scheme=mark_scheme,
         total_marks=total_marks,
-    )
+    ) + f"\n\nOCR transcription (may contain errors, cross-reference with the image):\n{extracted_text}"
 
     image_part = Part.from_data(data=image_bytes, mime_type=image.content_type)
 
@@ -46,4 +48,5 @@ async def mark_answer(
     )
 
     result = json.loads(response.text)
+    result["ocr_text"] = extracted_text  # useful for debugging/demo transparency
     return result
