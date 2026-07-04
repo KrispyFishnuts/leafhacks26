@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Markup — AI Exam Marker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --board: #1E3A2F;
+    --board-dark: #16291F;
+    --chalk: #F2EFE4;
+    --chalk-dim: #B9C4B8;
+    --chalk-yellow: #E8B94B;
+    --chalk-red: #D65A4A;
+    --chalk-green: #7FB88E;
+    --paper: #FDFBF3;
+    --paper-line: #E4DFCB;
+    --ink: #26241F;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(ellipse at top left, rgba(255,255,255,0.03), transparent 60%),
+      radial-gradient(ellipse at bottom right, rgba(0,0,0,0.15), transparent 60%),
+      var(--board);
+    color: var(--chalk);
+    font-family: 'Inter', sans-serif;
+    padding: 48px 20px 80px;
+  }
+
+  .wrap {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .logo {
+    font-family: 'Kalam', cursive;
+    font-weight: 700;
+    font-size: 2.6rem;
+    color: var(--chalk);
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 18px rgba(242,239,228,0.15);
+  }
+
+  .tagline {
+    margin-top: 6px;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--chalk-dim);
+  }
+
+  .paper {
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 3px;
+    padding: 32px 28px 28px;
+    transform: rotate(-0.6deg);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.35), 0 2px 0 rgba(0,0,0,0.05);
+    position: relative;
+  }
+
+  .tape {
+    position: absolute;
+    width: 70px;
+    height: 24px;
+    background: rgba(232, 185, 75, 0.35);
+    border: 1px solid rgba(232, 185, 75, 0.5);
+    top: -12px;
+  }
+  .tape.left { left: 24px; transform: rotate(-8deg); }
+  .tape.right { right: 24px; transform: rotate(6deg); }
+
+  label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6b6656;
+    margin: 20px 0 6px;
+  }
+  label:first-of-type { margin-top: 0; }
+
+  input[type="text"],
+  input[type="number"],
+  textarea {
+    width: 100%;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.92rem;
+    padding: 10px 12px;
+    border: 1px solid var(--paper-line);
+    border-radius: 4px;
+    background: #fffdf6;
+    color: var(--ink);
+    resize: vertical;
+  }
+  textarea { min-height: 84px; }
+
+  input:focus, textarea:focus, button:focus, .dropzone:focus {
+    outline: 3px solid var(--chalk-yellow);
+    outline-offset: 2px;
+  }
+
+  .row {
+    display: flex;
+    gap: 16px;
+  }
+  .row > div { flex: 1; }
+
+  .dropzone {
+    margin-top: 6px;
+    border: 2px dashed #c9c2a4;
+    border-radius: 6px;
+    padding: 22px;
+    text-align: center;
+    cursor: pointer;
+    color: #6b6656;
+    font-size: 0.88rem;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .dropzone.dragover {
+    border-color: var(--chalk-yellow);
+    background: rgba(232, 185, 75, 0.08);
+  }
+  .dropzone img {
+    max-width: 100%;
+    max-height: 160px;
+    border-radius: 4px;
+    margin-top: 10px;
+  }
+
+  button.submit {
+    margin-top: 26px;
+    width: 100%;
+    background: var(--chalk-yellow);
+    color: #2a2410;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 14px;
+    border-radius: 6px 8px 7px 9px;
+    cursor: pointer;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    box-shadow: 0 3px 0 #b8912f;
+  }
+  button.submit:hover { transform: translateY(-1px); }
+  button.submit:active { transform: translateY(2px); box-shadow: 0 1px 0 #b8912f; }
+  button.submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .error {
+    margin-top: 16px;
+    color: var(--chalk-red);
+    font-family: 'Kalam', cursive;
+    font-size: 1.05rem;
+    display: none;
+  }
+
+  /* Results, written on the chalkboard itself */
+  .results {
+    margin-top: 48px;
+    display: none;
+  }
+
+  .score-wrap {
+    position: relative;
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .score-wrap svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+  .score-circle {
+    fill: none;
+    stroke: var(--chalk-yellow);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-dasharray: 400;
+    stroke-dashoffset: 400;
+    animation: draw 0.9s ease-out forwards 0.15s;
+  }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+
+  .score-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--chalk-yellow);
+  }
+  .score-max {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--chalk-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  .breakdown-item {
+    display: flex;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px dashed rgba(242,239,228,0.15);
+  }
+  .breakdown-item:last-child { border-bottom: none; }
+
+  .mark-icon {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+  }
+
+  .criterion-text {
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .criterion-score {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--chalk-dim);
+    margin-left: 6px;
+  }
+  .criterion-comment {
+    font-size: 0.87rem;
+    color: var(--chalk-dim);
+    margin-top: 3px;
+  }
+
+  .teacher-note {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(242,239,228,0.15);
+  }
+  .teacher-note .label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--chalk-dim);
+    margin-bottom: 8px;
+  }
+  .teacher-note p {
+    font-family: 'Kalam', cursive;
+    font-size: 1.25rem;
+    color: var(--chalk-red);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  details.ocr {
+    margin-top: 28px;
+    font-size: 0.82rem;
+    color: var(--chalk-dim);
+  }
+  details.ocr summary {
+    cursor: pointer;
+    outline: none;
+  }
+  details.ocr summary:focus { outline: 2px solid var(--chalk-yellow); }
+  details.ocr pre {
+    white-space: pre-wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    margin-top: 10px;
+    color: var(--chalk-dim);
+  }
+
+  .loading {
+    display: none;
+    text-align: center;
+    margin-top: 28px;
+    font-family: 'Kalam', cursive;
+    font-size: 1.1rem;
+    color: var(--chalk-dim);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .score-circle { animation: none; stroke-dashoffset: 0; }
+    button.submit:hover, button.submit:active { transform: none; }
+  }
+
+  @media (max-width: 480px) {
+    .row { flex-direction: column; gap: 0; }
+    .logo { font-size: 2.1rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">Markup</div>
+    <div class="tagline">Photograph it. We'll mark it.</div>
+  </header>
+
+  <form id="markForm" class="paper">
+    <span class="tape left"></span>
+    <span class="tape right"></span>
+
+    <label for="question">Question</label>
+    <input type="text" id="question" name="question" placeholder="e.g. How is GDP calculated and what does it indicate?" required />
+
+    <label for="markScheme">Mark scheme</label>
+    <textarea id="markScheme" name="mark_scheme" placeholder="e.g. 1 mark: production, income, expenditure methods. 2 marks: explains GDP as an indicator of economic wellbeing." required></textarea>
+
+    <div class="row">
+      <div>
+        <label for="totalMarks">Total marks</label>
+        <input type="number" id="totalMarks" name="total_marks" min="1" value="3" required />
+      </div>
+    </div>
+
+    <label for="imageInput">Student's answer</label>
+    <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload a photo of the handwritten answer">
+      <span id="dropzoneText">Drag a photo here, or click to choose one</span>
+      <input type="file" id="imageInput" name="image" accept="image/*" required style="display:none" />
+      <div id="previewWrap"></div>
+    </div>
+
+    <button type="submit" class="submit" id="submitBtn">Mark this answer</button>
+    <div class="error" id="errorMsg"></div>
+  </form>
+
+  <div class="loading" id="loading">grading in progress…</div>
+
+  <div class="results" id="results">
+    <div class="score-wrap">
+      <svg viewBox="0 0 160 160">
+        <circle class="score-circle" cx="80" cy="80" r="64"
+          d="" />
+      </svg>
+      <div class="score-num" id="scoreNum">0</div>
+    </div>
+    <div class="score-max" id="scoreMax">out of 0</div>
+
+    <div id="breakdownList"></div>
+
+    <div class="teacher-note">
+      <div class="label">Teacher's note</div>
+      <p id="overallFeedback"></p>
+    </div>
+
+    <details class="ocr">
+      <summary>What we read from your handwriting</summary>
+      <pre id="ocrText"></pre>
+    </details>
+  </div>
+</div>
+
+<script>
+  const API_BASE = "http://localhost:8000"; // swap this for your Cloud Run URL once deployed
+
+  const form = document.getElementById('markForm');
+  const dropzone = document.getElementById('dropzone');
+  const imageInput = document.getElementById('imageInput');
+  const dropzoneText = document.getElementById('dropzoneText');
+  const previewWrap = document.getElementById('previewWrap');
+  const submitBtn = document.getElementById('submitBtn');
+  const loading = document.getElementById('loading');
+  const results = document.getElementById('results');
+  const errorMsg = document.getElementById('errorMsg');
+
+  let selectedFile = null;
+
+  dropzone.addEventListener('click', () => imageInput.click());
+  dropzone.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); imageInput.click(); }
+  });
+
+  ['dragover', 'dragenter'].forEach(evt =>
+    dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.add('dragover'); })
+  );
+  ['dragleave', 'drop'].forEach(evt =>
+    dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.remove('dragover'); })
+  );
+  dropzone.addEventListener('drop', (e) => {
+    const file = e.dataTransfer.files[0];
+    if (file) handleFile(file);
+  });
+  imageInput.addEventListener('change', () => {
+    if (imageInput.files[0]) handleFile(imageInput.files[0]);
+  });
+
+  function handleFile(file) {
+    selectedFile = file;
+    dropzoneText.textContent = file.name;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      previewWrap.innerHTML = `<img src="${e.target.result}" alt="Preview of uploaded answer" />`;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorMsg.style.display = 'none';
+    results.style.display = 'none';
+
+    if (!selectedFile) {
+      errorMsg.textContent = "Add a photo of the answer before marking.";
+      errorMsg.style.display = 'block';
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('question', document.getElementById('question').value);
+    formData.append('mark_scheme', document.getElementById('markScheme').value);
+    formData.append('total_marks', document.getElementById('totalMarks').value);
+    formData.append('image', selectedFile);
+
+    submitBtn.disabled = true;
+    loading.style.display = 'block';
+
+    try {
+      const res = await fetch(`${API_BASE}/mark`, { method: 'POST', body: formData });
+      if (!res.ok) throw new Error(`Server responded with ${res.status}`);
+      const data = await res.json();
+      renderResults(data);
+    } catch (err) {
+      errorMsg.textContent = "Couldn't mark that answer — check the photo is clear and the server is running, then try again.";
+      errorMsg.style.display = 'block';
+    } finally {
+      submitBtn.disabled = false;
+      loading.style.display = 'none';
+    }
+  });
+
+  function renderResults(data) {
+    document.getElementById('scoreNum').textContent = data.total_score;
+    document.getElementById('scoreMax').textContent = `out of ${data.max_score}`;
+
+    const circle = document.querySelector('.score-circle');
+    const circumference = 2 * Math.PI * 64;
+    const fraction = data.max_score > 0 ? data.total_score / data.max_score : 0;
+    circle.style.strokeDasharray = `${circumference}`;
+    circle.style.strokeDashoffset = `${circumference}`;
+    circle.getBoundingClientRect(); // force reflow to restart animation
+    circle.style.transition = 'stroke-dashoffset 0.9s ease-out';
+    requestAnimationFrame(() => {
+      circle.style.strokeDashoffset = `${circumference * (1 - fraction)}`;
+    });
+
+    const list = document.getElementById('breakdownList');
+    list.innerHTML = '';
+    (data.breakdown || []).forEach(item => {
+      const full = item.awarded >= item.max;
+      const zero = item.awarded === 0;
+      const color = full ? 'var(--chalk-green)' : (zero ? 'var(--chalk-red)' : 'var(--chalk-yellow)');
+      const icon = full
+        ? `<svg class="mark-icon" viewBox="0 0 26 26"><path d="M5 14l6 6L21 7" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+        : `<svg class="mark-icon" viewBox="0 0 26 26"><path d="M6 6l14 14M20 6L6 20" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round"/></svg>`;
+
+      const row = document.createElement('div');
+      row.className = 'breakdown-item';
+      row.innerHTML = `
+        ${icon}
+        <div>
+          <span class="criterion-text">${escapeHtml(item.criterion)}</span>
+          <span class="criterion-score">${item.awarded}/${item.max}</span>
+          <div class="criterion-comment">${escapeHtml(item.comment)}</div>
+        </div>
+      `;
+      list.appendChild(row);
+    });
+
+    document.getElementById('overallFeedback').textContent = data.overall_feedback || '';
+    document.getElementById('ocrText').textContent = data.ocr_text || '(not available)';
+
+    results.style.display = 'block';
+    results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+</script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 import json
 
 from fastapi import FastAPI, UploadFile, File, Form
+from fastapi.middleware.cors import CORSMiddleware
 from vertexai.generative_models import Part, GenerationConfig
 
 from app.prompts import MARKING_PROMPT_TEMPLATE
@@ -9,12 +10,20 @@ from app.services.vision_client import extract_text
 
 app = FastAPI(title="LeafHacks26 - AI Exam Marker")
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # hackathon-only setting — restrict this before any real deployment
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 model = get_model()
 
 
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
 
 @app.post("/mark")
 async def mark_answer(
@@ -48,5 +57,5 @@ async def mark_answer(
     )
 
     result = json.loads(response.text)
-    result["ocr_text"] = extracted_text  # useful for debugging/demo transparency
+    result["ocr_text"] = extracted_text
     return result
