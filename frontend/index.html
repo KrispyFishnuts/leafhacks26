@@ -5,19 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Markup — AI Exam Marker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --board: #1E3A2F;
-    --board-dark: #16291F;
-    --chalk: #F2EFE4;
-    --chalk-dim: #B9C4B8;
-    --chalk-yellow: #E8B94B;
-    --chalk-red: #D65A4A;
-    --chalk-green: #7FB88E;
-    --paper: #FDFBF3;
-    --paper-line: #E4DFCB;
-    --ink: #26241F;
+    --bg: #0B0E14;
+    --surface: #131720;
+    --surface-2: #1B212D;
+    --border: #262D3A;
+    --text: #ECEEF3;
+    --text-dim: #8B93A7;
+    --text-faint: #565E6E;
+    --accent-a: #6C8CFF;
+    --accent-b: #6EE7D8;
+    --success: #4ADE80;
+    --danger: #F87171;
+    --amber: #FBBF24;
   }
 
   * { box-sizing: border-box; }
@@ -26,338 +28,411 @@
     margin: 0;
     min-height: 100vh;
     background:
-      radial-gradient(ellipse at top left, rgba(255,255,255,0.03), transparent 60%),
-      radial-gradient(ellipse at bottom right, rgba(0,0,0,0.15), transparent 60%),
-      var(--board);
-    color: var(--chalk);
+      radial-gradient(600px circle at 15% -5%, rgba(108,140,255,0.08), transparent 60%),
+      radial-gradient(600px circle at 90% 10%, rgba(110,231,216,0.06), transparent 60%),
+      var(--bg);
+    color: var(--text);
     font-family: 'Inter', sans-serif;
-    padding: 48px 20px 80px;
+    padding: 56px 20px 100px;
   }
 
-  .wrap {
-    max-width: 640px;
-    margin: 0 auto;
-  }
+  .wrap { max-width: 620px; margin: 0 auto; }
 
-  header {
-    text-align: center;
-    margin-bottom: 40px;
-  }
+  header { margin-bottom: 36px; }
 
   .logo {
-    font-family: 'Kalam', cursive;
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
-    font-size: 2.6rem;
-    color: var(--chalk);
-    letter-spacing: 0.5px;
-    text-shadow: 0 0 18px rgba(242,239,228,0.15);
+    font-size: 1.7rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
-
+  .logo .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-a), var(--accent-b));
+    box-shadow: 0 0 14px rgba(110,231,216,0.5);
+  }
   .tagline {
-    margin-top: 6px;
-    font-size: 0.78rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--chalk-dim);
+    margin-top: 8px;
+    font-size: 0.92rem;
+    color: var(--text-dim);
   }
 
-  .paper {
-    background: var(--paper);
-    color: var(--ink);
-    border-radius: 3px;
-    padding: 32px 28px 28px;
-    transform: rotate(-0.6deg);
-    box-shadow: 0 18px 40px rgba(0,0,0,0.35), 0 2px 0 rgba(0,0,0,0.05);
-    position: relative;
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
   }
 
-  .tape {
-    position: absolute;
-    width: 70px;
-    height: 24px;
-    background: rgba(232, 185, 75, 0.35);
-    border: 1px solid rgba(232, 185, 75, 0.5);
-    top: -12px;
-  }
-  .tape.left { left: 24px; transform: rotate(-8deg); }
-  .tape.right { right: 24px; transform: rotate(6deg); }
+  .field { margin-bottom: 24px; }
+  .field:last-child { margin-bottom: 0; }
 
-  label {
-    display: block;
-    font-size: 0.78rem;
+  .field-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  label.field-label {
+    font-size: 0.8rem;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #6b6656;
-    margin: 20px 0 6px;
+    letter-spacing: 0.02em;
+    color: var(--text-dim);
   }
-  label:first-of-type { margin-top: 0; }
+
+  /* Segmented toggle */
+  .segmented {
+    display: inline-flex;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 2px;
+    gap: 2px;
+  }
+  .segmented button {
+    border: none;
+    background: transparent;
+    color: var(--text-faint);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.76rem;
+    font-weight: 600;
+    padding: 5px 11px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .segmented button.active {
+    background: var(--surface);
+    color: var(--text);
+  }
+  .segmented button:focus-visible {
+    outline: 2px solid var(--accent-b);
+    outline-offset: 1px;
+  }
 
   input[type="text"],
   input[type="number"],
   textarea {
     width: 100%;
-    font-family: 'JetBrains Mono', monospace;
+    font-family: 'Inter', sans-serif;
     font-size: 0.92rem;
-    padding: 10px 12px;
-    border: 1px solid var(--paper-line);
-    border-radius: 4px;
-    background: #fffdf6;
-    color: var(--ink);
-    resize: vertical;
+    padding: 11px 13px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--surface-2);
+    color: var(--text);
   }
-  textarea { min-height: 84px; }
+  textarea { min-height: 80px; resize: vertical; font-family: 'Inter', sans-serif; }
+  input::placeholder, textarea::placeholder { color: var(--text-faint); }
 
-  input:focus, textarea:focus, button:focus, .dropzone:focus {
-    outline: 3px solid var(--chalk-yellow);
+  input:focus, textarea:focus, button:focus-visible, .dropzone:focus-visible {
+    outline: 2px solid var(--accent-b);
     outline-offset: 2px;
   }
 
-  .row {
-    display: flex;
-    gap: 16px;
-  }
-  .row > div { flex: 1; }
-
   .dropzone {
-    margin-top: 6px;
-    border: 2px dashed #c9c2a4;
-    border-radius: 6px;
-    padding: 22px;
+    border: 1.5px dashed var(--border);
+    border-radius: 10px;
+    padding: 18px;
     text-align: center;
     cursor: pointer;
-    color: #6b6656;
-    font-size: 0.88rem;
+    color: var(--text-faint);
+    font-size: 0.85rem;
     transition: border-color 0.15s ease, background 0.15s ease;
   }
   .dropzone.dragover {
-    border-color: var(--chalk-yellow);
-    background: rgba(232, 185, 75, 0.08);
+    border-color: var(--accent-b);
+    background: rgba(110,231,216,0.05);
   }
   .dropzone img {
     max-width: 100%;
-    max-height: 160px;
-    border-radius: 4px;
+    max-height: 140px;
+    border-radius: 6px;
     margin-top: 10px;
   }
+  .dropzone .hint { font-size: 0.72rem; color: var(--text-faint); margin-top: 2px; }
 
-  button.submit {
-    margin-top: 26px;
-    width: 100%;
-    background: var(--chalk-yellow);
-    color: #2a2410;
-    border: none;
-    font-family: 'Inter', sans-serif;
-    font-weight: 700;
-    font-size: 1rem;
-    padding: 14px;
-    border-radius: 6px 8px 7px 9px;
-    cursor: pointer;
-    transition: transform 0.1s ease, box-shadow 0.1s ease;
-    box-shadow: 0 3px 0 #b8912f;
+  .file-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.8rem;
+    color: var(--text);
   }
-  button.submit:hover { transform: translateY(-1px); }
-  button.submit:active { transform: translateY(2px); box-shadow: 0 1px 0 #b8912f; }
-  button.submit:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-  }
+  .file-chip svg { flex: none; }
 
-  .error {
-    margin-top: 16px;
-    color: var(--chalk-red);
-    font-family: 'Kalam', cursive;
-    font-size: 1.05rem;
-    display: none;
-  }
-
-  /* Results, written on the chalkboard itself */
-  .results {
-    margin-top: 48px;
-    display: none;
-  }
-
-  .score-wrap {
-    position: relative;
-    width: 160px;
-    height: 160px;
-    margin: 0 auto 8px;
+  .total-marks-row {
     display: flex;
     align-items: center;
-    justify-content: center;
-  }
-  .score-wrap svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-  .score-circle {
-    fill: none;
-    stroke: var(--chalk-yellow);
-    stroke-width: 4;
-    stroke-linecap: round;
-    stroke-dasharray: 400;
-    stroke-dashoffset: 400;
-    animation: draw 0.9s ease-out forwards 0.15s;
-  }
-  @keyframes draw { to { stroke-dashoffset: 0; } }
-
-  .score-num {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: var(--chalk-yellow);
-  }
-  .score-max {
-    text-align: center;
-    font-size: 0.8rem;
-    color: var(--chalk-dim);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 28px;
-  }
-
-  .breakdown-item {
-    display: flex;
     gap: 12px;
-    padding: 14px 0;
-    border-bottom: 1px dashed rgba(242,239,228,0.15);
   }
-  .breakdown-item:last-child { border-bottom: none; }
+  .total-marks-row input { width: 90px; flex: none; }
 
-  .mark-icon {
-    flex-shrink: 0;
-    width: 26px;
-    height: 26px;
-  }
-
-  .criterion-text {
+  button.submit {
+    margin-top: 6px;
+    width: 100%;
+    background: linear-gradient(135deg, var(--accent-a), var(--accent-b));
+    color: #0B0E14;
+    border: none;
+    font-family: 'Space Grotesk', sans-serif;
     font-weight: 600;
-    font-size: 0.95rem;
-  }
-  .criterion-score {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.8rem;
-    color: var(--chalk-dim);
-    margin-left: 6px;
-  }
-  .criterion-comment {
-    font-size: 0.87rem;
-    color: var(--chalk-dim);
-    margin-top: 3px;
-  }
-
-  .teacher-note {
-    margin-top: 32px;
-    padding-top: 24px;
-    border-top: 1px solid rgba(242,239,228,0.15);
-  }
-  .teacher-note .label {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--chalk-dim);
-    margin-bottom: 8px;
-  }
-  .teacher-note p {
-    font-family: 'Kalam', cursive;
-    font-size: 1.25rem;
-    color: var(--chalk-red);
-    line-height: 1.5;
-    margin: 0;
-  }
-
-  details.ocr {
-    margin-top: 28px;
-    font-size: 0.82rem;
-    color: var(--chalk-dim);
-  }
-  details.ocr summary {
+    font-size: 1rem;
+    padding: 14px;
+    border-radius: 10px;
     cursor: pointer;
-    outline: none;
+    transition: opacity 0.15s ease, transform 0.1s ease;
   }
-  details.ocr summary:focus { outline: 2px solid var(--chalk-yellow); }
-  details.ocr pre {
-    white-space: pre-wrap;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.78rem;
-    margin-top: 10px;
-    color: var(--chalk-dim);
+  button.submit:hover { opacity: 0.92; }
+  button.submit:active { transform: scale(0.99); }
+  button.submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .error {
+    margin-top: 14px;
+    color: var(--danger);
+    font-size: 0.87rem;
+    display: none;
   }
 
   .loading {
     display: none;
     text-align: center;
-    margin-top: 28px;
-    font-family: 'Kalam', cursive;
-    font-size: 1.1rem;
-    color: var(--chalk-dim);
+    margin-top: 24px;
+    font-size: 0.88rem;
+    color: var(--text-dim);
+  }
+  .loading .bars {
+    display: inline-flex;
+    gap: 3px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  .loading .bars span {
+    width: 3px;
+    height: 12px;
+    background: var(--accent-b);
+    border-radius: 2px;
+    animation: pulse 0.9s ease-in-out infinite;
+  }
+  .loading .bars span:nth-child(2) { animation-delay: 0.15s; }
+  .loading .bars span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes pulse { 0%, 100% { transform: scaleY(0.4); opacity: 0.5; } 50% { transform: scaleY(1); opacity: 1; } }
+
+  /* Results */
+  .results { display: none; margin-top: 28px; }
+
+  .score-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 28px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .ring-wrap { position: relative; width: 108px; height: 108px; flex: none; }
+  .ring-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .ring-track { fill: none; stroke: var(--surface-2); stroke-width: 8; }
+  .ring-fill {
+    fill: none;
+    stroke: url(#ringGradient);
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 289;
+    stroke-dashoffset: 289;
+  }
+  .ring-num {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .ring-num .n {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.6rem;
+  }
+  .ring-num .d { font-size: 0.68rem; color: var(--text-faint); }
+
+  .score-summary .label {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .score-summary .feedback {
+    font-size: 0.94rem;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  .breakdown {
+    margin-top: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 8px 24px;
+  }
+  .breakdown-item {
+    display: flex;
+    gap: 12px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .breakdown-item:last-child { border-bottom: none; }
+  .mark-icon { flex-shrink: 0; width: 22px; height: 22px; margin-top: 1px; }
+  .criterion-text { font-weight: 600; font-size: 0.92rem; }
+  .criterion-score {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.76rem;
+    color: var(--text-faint);
+    margin-left: 8px;
+  }
+  .criterion-comment { font-size: 0.85rem; color: var(--text-dim); margin-top: 3px; }
+
+  details.ocr {
+    margin-top: 16px;
+    font-size: 0.82rem;
+    color: var(--text-faint);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 18px;
+  }
+  details.ocr summary { cursor: pointer; outline: none; color: var(--text-dim); }
+  details.ocr summary:focus-visible { outline: 2px solid var(--accent-b); }
+  details.ocr pre {
+    white-space: pre-wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.76rem;
+    margin: 10px 0 0;
+    color: var(--text-faint);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .score-circle { animation: none; stroke-dashoffset: 0; }
-    button.submit:hover, button.submit:active { transform: none; }
+    .loading .bars span { animation: none; }
   }
 
   @media (max-width: 480px) {
-    .row { flex-direction: column; gap: 0; }
-    .logo { font-size: 2.1rem; }
+    .score-card { flex-direction: column; text-align: center; }
   }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <div class="logo">Markup</div>
-    <div class="tagline">Photograph it. We'll mark it.</div>
+    <div class="logo"><span class="dot"></span>Markup</div>
+    <div class="tagline">Type it or upload it — question, mark scheme, and answer, in text, image, or PDF.</div>
   </header>
 
-  <form id="markForm" class="paper">
-    <span class="tape left"></span>
-    <span class="tape right"></span>
+  <form id="markForm" class="card">
 
-    <label for="question">Question</label>
-    <input type="text" id="question" name="question" placeholder="e.g. How is GDP calculated and what does it indicate?" required />
-
-    <label for="markScheme">Mark scheme</label>
-    <textarea id="markScheme" name="mark_scheme" placeholder="e.g. 1 mark: production, income, expenditure methods. 2 marks: explains GDP as an indicator of economic wellbeing." required></textarea>
-
-    <div class="row">
-      <div>
-        <label for="totalMarks">Total marks</label>
-        <input type="number" id="totalMarks" name="total_marks" min="1" value="3" required />
+    <div class="field" data-group="question">
+      <div class="field-head">
+        <label class="field-label">Question</label>
+        <div class="segmented" data-toggle="question">
+          <button type="button" class="active" data-mode="text">Type it</button>
+          <button type="button" data-mode="file">Upload file</button>
+        </div>
+      </div>
+      <textarea class="mode-text" placeholder="e.g. How is GDP calculated and what does it indicate?"></textarea>
+      <div class="dropzone mode-file" tabindex="0" role="button" style="display:none" aria-label="Upload an image or PDF of the question">
+        <span class="dz-text">Drag a file here, or click to choose one</span>
+        <div class="dz-hint hint">Image or PDF</div>
+        <input type="file" accept="image/*,application/pdf" style="display:none" />
+        <div class="dz-preview"></div>
       </div>
     </div>
 
-    <label for="imageInput">Student's answer</label>
-    <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Upload a photo of the handwritten answer">
-      <span id="dropzoneText">Drag a photo here, or click to choose one</span>
-      <input type="file" id="imageInput" name="image" accept="image/*" required style="display:none" />
-      <div id="previewWrap"></div>
+    <div class="field" data-group="markScheme">
+      <div class="field-head">
+        <label class="field-label">Mark scheme</label>
+        <div class="segmented" data-toggle="markScheme">
+          <button type="button" class="active" data-mode="text">Type it</button>
+          <button type="button" data-mode="file">Upload file</button>
+        </div>
+      </div>
+      <textarea class="mode-text" placeholder="e.g. 1 mark: production, income, expenditure methods. 2 marks: explains GDP as an indicator of economic wellbeing."></textarea>
+      <div class="dropzone mode-file" tabindex="0" role="button" style="display:none" aria-label="Upload an image or PDF of the mark scheme">
+        <span class="dz-text">Drag a file here, or click to choose one</span>
+        <div class="dz-hint hint">Image or PDF</div>
+        <input type="file" accept="image/*,application/pdf" style="display:none" />
+        <div class="dz-preview"></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-head">
+        <label class="field-label" for="totalMarks">Total marks</label>
+      </div>
+      <div class="total-marks-row">
+        <input type="number" id="totalMarks" min="1" value="3" required />
+      </div>
+    </div>
+
+    <div class="field" data-group="answer">
+      <div class="field-head">
+        <label class="field-label">Student's answer</label>
+        <div class="segmented" data-toggle="answer">
+          <button type="button" data-mode="text">Type it</button>
+          <button type="button" class="active" data-mode="file">Upload file</button>
+        </div>
+      </div>
+      <textarea class="mode-text" style="display:none" placeholder="Type or paste the student's answer here..."></textarea>
+      <div class="dropzone mode-file" tabindex="0" role="button" aria-label="Upload an image or PDF of the student's answer">
+        <span class="dz-text">Drag a file here, or click to choose one</span>
+        <div class="dz-hint hint">Image or PDF — handwritten answers work best as a clear photo</div>
+        <input type="file" accept="image/*,application/pdf" style="display:none" />
+        <div class="dz-preview"></div>
+      </div>
     </div>
 
     <button type="submit" class="submit" id="submitBtn">Mark this answer</button>
     <div class="error" id="errorMsg"></div>
+    <div class="loading" id="loading"><span class="bars"><span></span><span></span><span></span></span>Grading in progress</div>
   </form>
 
-  <div class="loading" id="loading">grading in progress…</div>
-
   <div class="results" id="results">
-    <div class="score-wrap">
-      <svg viewBox="0 0 160 160">
-        <circle class="score-circle" cx="80" cy="80" r="64"
-          d="" />
-      </svg>
-      <div class="score-num" id="scoreNum">0</div>
+    <div class="score-card">
+      <div class="ring-wrap">
+        <svg viewBox="0 0 108 108">
+          <defs>
+            <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#6C8CFF" />
+              <stop offset="100%" stop-color="#6EE7D8" />
+            </linearGradient>
+          </defs>
+          <circle class="ring-track" cx="54" cy="54" r="46" />
+          <circle class="ring-fill" id="ringFill" cx="54" cy="54" r="46" />
+        </svg>
+        <div class="ring-num">
+          <span class="n" id="scoreNum">0</span>
+          <span class="d" id="scoreMax">/ 0</span>
+        </div>
+      </div>
+      <div class="score-summary">
+        <div class="label">Feedback</div>
+        <div class="feedback" id="overallFeedback"></div>
+      </div>
     </div>
-    <div class="score-max" id="scoreMax">out of 0</div>
 
-    <div id="breakdownList"></div>
+    <div class="breakdown" id="breakdownList"></div>
 
-    <div class="teacher-note">
-      <div class="label">Teacher's note</div>
-      <p id="overallFeedback"></p>
-    </div>
-
-    <details class="ocr">
-      <summary>What we read from your handwriting</summary>
+    <details class="ocr" id="ocrDetails">
+      <summary>What we read from the handwriting</summary>
       <pre id="ocrText"></pre>
     </details>
   </div>
@@ -366,45 +441,79 @@
 <script>
   const API_BASE = "http://localhost:8000"; // swap this for your Cloud Run URL once deployed
 
+  const FILE_ICON = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>`;
+
+  // ---- Segmented toggles (text vs file mode) ----
+  document.querySelectorAll('.segmented').forEach(seg => {
+    const group = seg.closest('.field');
+    seg.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        seg.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const mode = btn.dataset.mode;
+        group.querySelector('.mode-text').style.display = mode === 'text' ? 'block' : 'none';
+        group.querySelector('.mode-file').style.display = mode === 'file' ? 'block' : 'none';
+      });
+    });
+  });
+
+  // ---- Generic dropzone wiring (images preview as thumbnails, PDFs show a file chip) ----
+  const fileState = {}; // group name -> File
+
+  document.querySelectorAll('.dropzone').forEach(dz => {
+    const group = dz.closest('.field').dataset.group;
+    const input = dz.querySelector('input[type="file"]');
+    const textEl = dz.querySelector('.dz-text');
+    const previewEl = dz.querySelector('.dz-preview');
+
+    dz.addEventListener('click', () => input.click());
+    dz.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+    });
+    ['dragover', 'dragenter'].forEach(evt =>
+      dz.addEventListener(evt, (e) => { e.preventDefault(); dz.classList.add('dragover'); })
+    );
+    ['dragleave', 'drop'].forEach(evt =>
+      dz.addEventListener(evt, (e) => { e.preventDefault(); dz.classList.remove('dragover'); })
+    );
+    dz.addEventListener('drop', (e) => {
+      const file = e.dataTransfer.files[0];
+      if (file) setFile(file);
+    });
+    input.addEventListener('change', () => {
+      if (input.files[0]) setFile(input.files[0]);
+    });
+
+    function setFile(file) {
+      fileState[group] = file;
+      textEl.textContent = file.name;
+
+      if (file.type === 'application/pdf') {
+        previewEl.innerHTML = `<div class="file-chip">${FILE_ICON}<span>${file.name}</span></div>`;
+      } else {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          previewEl.innerHTML = `<img src="${e.target.result}" alt="Preview" />`;
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  });
+
+  // ---- Submit ----
   const form = document.getElementById('markForm');
-  const dropzone = document.getElementById('dropzone');
-  const imageInput = document.getElementById('imageInput');
-  const dropzoneText = document.getElementById('dropzoneText');
-  const previewWrap = document.getElementById('previewWrap');
   const submitBtn = document.getElementById('submitBtn');
   const loading = document.getElementById('loading');
   const results = document.getElementById('results');
   const errorMsg = document.getElementById('errorMsg');
 
-  let selectedFile = null;
+  function activeMode(groupName) {
+    const seg = document.querySelector(`.segmented[data-toggle="${groupName}"]`);
+    return seg.querySelector('button.active').dataset.mode;
+  }
 
-  dropzone.addEventListener('click', () => imageInput.click());
-  dropzone.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); imageInput.click(); }
-  });
-
-  ['dragover', 'dragenter'].forEach(evt =>
-    dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.add('dragover'); })
-  );
-  ['dragleave', 'drop'].forEach(evt =>
-    dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.remove('dragover'); })
-  );
-  dropzone.addEventListener('drop', (e) => {
-    const file = e.dataTransfer.files[0];
-    if (file) handleFile(file);
-  });
-  imageInput.addEventListener('change', () => {
-    if (imageInput.files[0]) handleFile(imageInput.files[0]);
-  });
-
-  function handleFile(file) {
-    selectedFile = file;
-    dropzoneText.textContent = file.name;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      previewWrap.innerHTML = `<img src="${e.target.result}" alt="Preview of uploaded answer" />`;
-    };
-    reader.readAsDataURL(file);
+  function textValueOf(groupName) {
+    return form.querySelector(`[data-group="${groupName}"] textarea`).value.trim();
   }
 
   form.addEventListener('submit', async (e) => {
@@ -412,48 +521,81 @@
     errorMsg.style.display = 'none';
     results.style.display = 'none';
 
-    if (!selectedFile) {
-      errorMsg.textContent = "Add a photo of the answer before marking.";
-      errorMsg.style.display = 'block';
-      return;
+    const modes = {
+      question: activeMode('question'),
+      markScheme: activeMode('markScheme'),
+      answer: activeMode('answer'),
+    };
+
+    const labels = { question: 'the question', markScheme: 'the mark scheme', answer: "the student's answer" };
+
+    for (const key of ['question', 'markScheme', 'answer']) {
+      if (modes[key] === 'text' && !textValueOf(key)) {
+        return showError(`Add ${labels[key]} — type it or switch to upload a file.`);
+      }
+      if (modes[key] === 'file' && !fileState[key]) {
+        return showError(`Upload a file for ${labels[key]}, or switch to type it.`);
+      }
     }
 
     const formData = new FormData();
-    formData.append('question', document.getElementById('question').value);
-    formData.append('mark_scheme', document.getElementById('markScheme').value);
     formData.append('total_marks', document.getElementById('totalMarks').value);
-    formData.append('image', selectedFile);
+
+    if (modes.question === 'text') {
+      formData.append('question_text', textValueOf('question'));
+    } else {
+      formData.append('question_file', fileState.question);
+    }
+
+    if (modes.markScheme === 'text') {
+      formData.append('mark_scheme_text', textValueOf('markScheme'));
+    } else {
+      formData.append('mark_scheme_file', fileState.markScheme);
+    }
+
+    if (modes.answer === 'text') {
+      formData.append('answer_text', textValueOf('answer'));
+    } else {
+      formData.append('answer_file', fileState.answer);
+    }
 
     submitBtn.disabled = true;
     loading.style.display = 'block';
 
     try {
       const res = await fetch(`${API_BASE}/mark`, { method: 'POST', body: formData });
-      if (!res.ok) throw new Error(`Server responded with ${res.status}`);
+      if (!res.ok) {
+        const detail = await res.json().catch(() => null);
+        throw new Error(detail?.detail || `Server responded with ${res.status}`);
+      }
       const data = await res.json();
       renderResults(data);
     } catch (err) {
-      errorMsg.textContent = "Couldn't mark that answer — check the photo is clear and the server is running, then try again.";
-      errorMsg.style.display = 'block';
+      showError(err.message || "Couldn't mark that answer — check your files are clear and the server is running, then try again.");
     } finally {
       submitBtn.disabled = false;
       loading.style.display = 'none';
     }
   });
 
+  function showError(msg) {
+    errorMsg.textContent = msg;
+    errorMsg.style.display = 'block';
+  }
+
   function renderResults(data) {
     document.getElementById('scoreNum').textContent = data.total_score;
-    document.getElementById('scoreMax').textContent = `out of ${data.max_score}`;
+    document.getElementById('scoreMax').textContent = `/ ${data.max_score}`;
 
-    const circle = document.querySelector('.score-circle');
-    const circumference = 2 * Math.PI * 64;
+    const ring = document.getElementById('ringFill');
+    const circumference = 2 * Math.PI * 46;
     const fraction = data.max_score > 0 ? data.total_score / data.max_score : 0;
-    circle.style.strokeDasharray = `${circumference}`;
-    circle.style.strokeDashoffset = `${circumference}`;
-    circle.getBoundingClientRect(); // force reflow to restart animation
-    circle.style.transition = 'stroke-dashoffset 0.9s ease-out';
+    ring.style.strokeDasharray = `${circumference}`;
+    ring.style.strokeDashoffset = `${circumference}`;
+    ring.getBoundingClientRect();
+    ring.style.transition = 'stroke-dashoffset 0.8s ease-out';
     requestAnimationFrame(() => {
-      circle.style.strokeDashoffset = `${circumference * (1 - fraction)}`;
+      ring.style.strokeDashoffset = `${circumference * (1 - fraction)}`;
     });
 
     const list = document.getElementById('breakdownList');
@@ -461,10 +603,10 @@
     (data.breakdown || []).forEach(item => {
       const full = item.awarded >= item.max;
       const zero = item.awarded === 0;
-      const color = full ? 'var(--chalk-green)' : (zero ? 'var(--chalk-red)' : 'var(--chalk-yellow)');
+      const color = full ? 'var(--success)' : (zero ? 'var(--danger)' : 'var(--amber)');
       const icon = full
-        ? `<svg class="mark-icon" viewBox="0 0 26 26"><path d="M5 14l6 6L21 7" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`
-        : `<svg class="mark-icon" viewBox="0 0 26 26"><path d="M6 6l14 14M20 6L6 20" fill="none" stroke="${color}" stroke-width="3" stroke-linecap="round"/></svg>`;
+        ? `<svg class="mark-icon" viewBox="0 0 22 22"><circle cx="11" cy="11" r="10" fill="none" stroke="${color}" stroke-width="1.5"/><path d="M6 11l3.2 3.2L16 7.5" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+        : `<svg class="mark-icon" viewBox="0 0 22 22"><circle cx="11" cy="11" r="10" fill="none" stroke="${color}" stroke-width="1.5"/><path d="M7.5 7.5l7 7M14.5 7.5l-7 7" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round"/></svg>`;
 
       const row = document.createElement('div');
       row.className = 'breakdown-item';
@@ -480,7 +622,14 @@
     });
 
     document.getElementById('overallFeedback').textContent = data.overall_feedback || '';
-    document.getElementById('ocrText').textContent = data.ocr_text || '(not available)';
+
+    const ocrDetails = document.getElementById('ocrDetails');
+    if (data.ocr_text) {
+      ocrDetails.style.display = 'block';
+      document.getElementById('ocrText').textContent = data.ocr_text;
+    } else {
+      ocrDetails.style.display = 'none';
+    }
 
     results.style.display = 'block';
     results.scrollIntoView({ behavior: 'smooth', block: 'start' });
