@@ -7,3 +7,4 @@ venv/
 service-account*.json
 .pytest_cache/
 *.log
+leafhacks26.db

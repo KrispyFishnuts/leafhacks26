@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Markup — AI Exam Marker</title>
+<title>Paramark — AI Exam Marker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -38,7 +38,14 @@
 
   .wrap { max-width: 620px; margin: 0 auto; }
 
-  header { margin-bottom: 36px; }
+  header.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
 
   .logo {
     font-family: 'Space Grotesk', sans-serif;
@@ -60,6 +67,27 @@
     font-size: 0.92rem;
     color: var(--text-dim);
   }
+
+  .account-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.82rem;
+    color: var(--text-dim);
+  }
+  .account-chip .name { color: var(--text); font-weight: 500; }
+  .link-btn {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82rem;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+  }
+  .link-btn:hover { color: var(--text); }
+  .link-btn:focus-visible { outline: 2px solid var(--accent-b); outline-offset: 2px; }
 
   .card {
     background: var(--surface);
@@ -85,7 +113,6 @@
     color: var(--text-dim);
   }
 
-  /* Segmented toggle */
   .segmented {
     display: inline-flex;
     background: var(--surface-2);
@@ -106,16 +133,11 @@
     cursor: pointer;
     transition: background 0.15s ease, color 0.15s ease;
   }
-  .segmented button.active {
-    background: var(--surface);
-    color: var(--text);
-  }
-  .segmented button:focus-visible {
-    outline: 2px solid var(--accent-b);
-    outline-offset: 1px;
-  }
+  .segmented button.active { background: var(--surface); color: var(--text); }
+  .segmented button:focus-visible { outline: 2px solid var(--accent-b); outline-offset: 1px; }
 
   input[type="text"],
+  input[type="password"],
   input[type="number"],
   textarea {
     width: 100%;
@@ -127,7 +149,7 @@
     background: var(--surface-2);
     color: var(--text);
   }
-  textarea { min-height: 80px; resize: vertical; font-family: 'Inter', sans-serif; }
+  textarea { min-height: 80px; resize: vertical; }
   input::placeholder, textarea::placeholder { color: var(--text-faint); }
 
   input:focus, textarea:focus, button:focus-visible, .dropzone:focus-visible {
@@ -145,16 +167,8 @@
     font-size: 0.85rem;
     transition: border-color 0.15s ease, background 0.15s ease;
   }
-  .dropzone.dragover {
-    border-color: var(--accent-b);
-    background: rgba(110,231,216,0.05);
-  }
-  .dropzone img {
-    max-width: 100%;
-    max-height: 140px;
-    border-radius: 6px;
-    margin-top: 10px;
-  }
+  .dropzone.dragover { border-color: var(--accent-b); background: rgba(110,231,216,0.05); }
+  .dropzone img { max-width: 100%; max-height: 140px; border-radius: 6px; margin-top: 10px; }
   .dropzone .hint { font-size: 0.72rem; color: var(--text-faint); margin-top: 2px; }
 
   .file-chip {
@@ -169,13 +183,8 @@
     font-size: 0.8rem;
     color: var(--text);
   }
-  .file-chip svg { flex: none; }
 
-  .total-marks-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+  .total-marks-row { display: flex; align-items: center; gap: 12px; }
   .total-marks-row input { width: 90px; flex: none; }
 
   button.submit {
@@ -210,241 +219,307 @@
     font-size: 0.88rem;
     color: var(--text-dim);
   }
-  .loading .bars {
-    display: inline-flex;
-    gap: 3px;
-    margin-right: 8px;
-    vertical-align: middle;
-  }
+  .loading .bars { display: inline-flex; gap: 3px; margin-right: 8px; vertical-align: middle; }
   .loading .bars span {
-    width: 3px;
-    height: 12px;
-    background: var(--accent-b);
-    border-radius: 2px;
+    width: 3px; height: 12px; background: var(--accent-b); border-radius: 2px;
     animation: pulse 0.9s ease-in-out infinite;
   }
   .loading .bars span:nth-child(2) { animation-delay: 0.15s; }
   .loading .bars span:nth-child(3) { animation-delay: 0.3s; }
   @keyframes pulse { 0%, 100% { transform: scaleY(0.4); opacity: 0.5; } 50% { transform: scaleY(1); opacity: 1; } }
 
+  /* Auth screen (dummy - name only, no password) */
+  .auth-screen { max-width: 400px; margin: 90px auto 0; }
+  .auth-field { margin-bottom: 18px; }
+  .auth-field label { display: block; font-size: 0.78rem; color: var(--text-dim); margin-bottom: 6px; }
+  .auth-hint { font-size: 0.78rem; color: var(--text-faint); margin-top: 14px; text-align: center; }
+
   /* Results */
   .results { display: none; margin-top: 28px; }
-
   .score-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 32px 28px;
-    display: flex;
-    align-items: center;
-    gap: 24px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    padding: 32px 28px; display: flex; align-items: center; gap: 24px;
   }
-
   .ring-wrap { position: relative; width: 108px; height: 108px; flex: none; }
   .ring-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
   .ring-track { fill: none; stroke: var(--surface-2); stroke-width: 8; }
   .ring-fill {
-    fill: none;
-    stroke: url(#ringGradient);
-    stroke-width: 8;
-    stroke-linecap: round;
-    stroke-dasharray: 289;
-    stroke-dashoffset: 289;
+    fill: none; stroke: url(#ringGradient); stroke-width: 8; stroke-linecap: round;
+    stroke-dasharray: 289; stroke-dashoffset: 289;
   }
-  .ring-num {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-  }
-  .ring-num .n {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: 1.6rem;
-  }
+  .ring-num { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; }
+  .ring-num .n { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.6rem; }
   .ring-num .d { font-size: 0.68rem; color: var(--text-faint); }
+  .score-summary .label { font-size: 0.78rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .score-summary .feedback { font-size: 0.94rem; line-height: 1.5; color: var(--text); }
 
-  .score-summary .label {
-    font-size: 0.78rem;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 6px;
-  }
-  .score-summary .feedback {
-    font-size: 0.94rem;
-    line-height: 1.5;
-    color: var(--text);
-  }
-
-  .breakdown {
-    margin-top: 16px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 8px 24px;
-  }
-  .breakdown-item {
-    display: flex;
-    gap: 12px;
-    padding: 16px 0;
-    border-bottom: 1px solid var(--border);
-  }
+  .breakdown { margin-top: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 8px 24px; }
+  .breakdown-item { display: flex; gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--border); }
   .breakdown-item:last-child { border-bottom: none; }
   .mark-icon { flex-shrink: 0; width: 22px; height: 22px; margin-top: 1px; }
   .criterion-text { font-weight: 600; font-size: 0.92rem; }
-  .criterion-score {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.76rem;
-    color: var(--text-faint);
-    margin-left: 8px;
-  }
+  .criterion-score { font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; color: var(--text-faint); margin-left: 8px; }
   .criterion-comment { font-size: 0.85rem; color: var(--text-dim); margin-top: 3px; }
 
   details.ocr {
-    margin-top: 16px;
-    font-size: 0.82rem;
-    color: var(--text-faint);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 14px 18px;
+    margin-top: 16px; font-size: 0.82rem; color: var(--text-faint);
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px;
   }
   details.ocr summary { cursor: pointer; outline: none; color: var(--text-dim); }
-  details.ocr summary:focus-visible { outline: 2px solid var(--accent-b); }
-  details.ocr pre {
-    white-space: pre-wrap;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.76rem;
-    margin: 10px 0 0;
-    color: var(--text-faint);
-  }
+  details.ocr pre { white-space: pre-wrap; font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; margin: 10px 0 0; color: var(--text-faint); }
 
-  @media (prefers-reduced-motion: reduce) {
-    .loading .bars span { animation: none; }
+  /* History */
+  .history-section { margin-top: 40px; }
+  .history-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .history-head h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600; margin: 0; }
+  .history-empty { font-size: 0.85rem; color: var(--text-faint); padding: 20px 0; }
+  .history-item {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 14px 18px; margin-bottom: 10px; cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
   }
+  .history-item:hover { border-color: var(--accent-b); }
+  .history-item .hi-left { display: flex; flex-direction: column; gap: 2px; }
+  .history-item .hi-date { font-size: 0.74rem; color: var(--text-faint); }
+  .history-item .hi-feedback { font-size: 0.85rem; color: var(--text-dim); max-width: 380px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .history-item .hi-score { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 0.95rem; color: var(--text); flex: none; }
+  .history-detail { display: none; margin-top: -2px; margin-bottom: 10px; }
 
-  @media (max-width: 480px) {
-    .score-card { flex-direction: column; text-align: center; }
-  }
+  @media (prefers-reduced-motion: reduce) { .loading .bars span { animation: none; } }
+  @media (max-width: 480px) { .score-card { flex-direction: column; text-align: center; } }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header>
-    <div class="logo"><span class="dot"></span>Markup</div>
-    <div class="tagline">Type it or upload it — question, mark scheme, and answer, in text, image, or PDF.</div>
-  </header>
 
-  <form id="markForm" class="card">
+  <!-- ============ DUMMY AUTH SCREEN (name only, no password) ============ -->
+  <div id="authScreen" class="auth-screen">
+    <header style="margin-bottom: 28px; text-align: left;">
+      <div class="logo"><span class="dot"></span>Paramark</div>
+      <div class="tagline">Enter your name to start marking and keep your history.</div>
+    </header>
 
-    <div class="field" data-group="question">
-      <div class="field-head">
-        <label class="field-label">Question</label>
-        <div class="segmented" data-toggle="question">
-          <button type="button" class="active" data-mode="text">Type it</button>
-          <button type="button" data-mode="file">Upload file</button>
+    <div class="card">
+      <form id="authForm">
+        <div class="auth-field">
+          <label for="authName">Username</label>
+          <input type="text" id="authName" placeholder="e.g. Jordan" required autocomplete="username" />
         </div>
-      </div>
-      <textarea class="mode-text" placeholder="e.g. How is GDP calculated and what does it indicate?"></textarea>
-      <div class="dropzone mode-file" tabindex="0" role="button" style="display:none" aria-label="Upload an image or PDF of the question">
-        <span class="dz-text">Drag a file here, or click to choose one</span>
-        <div class="dz-hint hint">Image or PDF</div>
-        <input type="file" accept="image/*,application/pdf" style="display:none" />
-        <div class="dz-preview"></div>
-      </div>
-    </div>
-
-    <div class="field" data-group="markScheme">
-      <div class="field-head">
-        <label class="field-label">Mark scheme</label>
-        <div class="segmented" data-toggle="markScheme">
-          <button type="button" class="active" data-mode="text">Type it</button>
-          <button type="button" data-mode="file">Upload file</button>
+        <div class="auth-field">
+          <label for="authPassword">Password</label>
+          <input type="password" id="authPassword" placeholder="••••••••" required autocomplete="current-password" />
         </div>
-      </div>
-      <textarea class="mode-text" placeholder="e.g. 1 mark: production, income, expenditure methods. 2 marks: explains GDP as an indicator of economic wellbeing."></textarea>
-      <div class="dropzone mode-file" tabindex="0" role="button" style="display:none" aria-label="Upload an image or PDF of the mark scheme">
-        <span class="dz-text">Drag a file here, or click to choose one</span>
-        <div class="dz-hint hint">Image or PDF</div>
-        <input type="file" accept="image/*,application/pdf" style="display:none" />
-        <div class="dz-preview"></div>
-      </div>
+        <button type="submit" class="submit" id="authSubmitBtn">Sign in</button>
+        <div class="error" id="authError"></div>
+      </form>
     </div>
-
-    <div class="field">
-      <div class="field-head">
-        <label class="field-label" for="totalMarks">Total marks</label>
-      </div>
-      <div class="total-marks-row">
-        <input type="number" id="totalMarks" min="1" value="3" required />
-      </div>
-    </div>
-
-    <div class="field" data-group="answer">
-      <div class="field-head">
-        <label class="field-label">Student's answer</label>
-        <div class="segmented" data-toggle="answer">
-          <button type="button" data-mode="text">Type it</button>
-          <button type="button" class="active" data-mode="file">Upload file</button>
-        </div>
-      </div>
-      <textarea class="mode-text" style="display:none" placeholder="Type or paste the student's answer here..."></textarea>
-      <div class="dropzone mode-file" tabindex="0" role="button" aria-label="Upload an image or PDF of the student's answer">
-        <span class="dz-text">Drag a file here, or click to choose one</span>
-        <div class="dz-hint hint">Image or PDF — handwritten answers work best as a clear photo</div>
-        <input type="file" accept="image/*,application/pdf" style="display:none" />
-        <div class="dz-preview"></div>
-      </div>
-    </div>
-
-    <button type="submit" class="submit" id="submitBtn">Mark this answer</button>
-    <div class="error" id="errorMsg"></div>
-    <div class="loading" id="loading"><span class="bars"><span></span><span></span><span></span></span>Grading in progress</div>
-  </form>
-
-  <div class="results" id="results">
-    <div class="score-card">
-      <div class="ring-wrap">
-        <svg viewBox="0 0 108 108">
-          <defs>
-            <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#6C8CFF" />
-              <stop offset="100%" stop-color="#6EE7D8" />
-            </linearGradient>
-          </defs>
-          <circle class="ring-track" cx="54" cy="54" r="46" />
-          <circle class="ring-fill" id="ringFill" cx="54" cy="54" r="46" />
-        </svg>
-        <div class="ring-num">
-          <span class="n" id="scoreNum">0</span>
-          <span class="d" id="scoreMax">/ 0</span>
-        </div>
-      </div>
-      <div class="score-summary">
-        <div class="label">Feedback</div>
-        <div class="feedback" id="overallFeedback"></div>
-      </div>
-    </div>
-
-    <div class="breakdown" id="breakdownList"></div>
-
-    <details class="ocr" id="ocrDetails">
-      <summary>What we read from the handwriting</summary>
-      <pre id="ocrText"></pre>
-    </details>
   </div>
+
+  <!-- ============ MAIN APP (shown once "logged in") ============ -->
+  <div id="appScreen" style="display:none;">
+    <header class="app-header">
+      <div>
+        <div class="logo"><span class="dot"></span>Paramark</div>
+        <div class="tagline">Type it or upload it — question, mark scheme, and answer.</div>
+      </div>
+      <div class="account-chip">
+        <span class="name" id="userName"></span>
+        <button class="link-btn" id="signOutBtn">Switch user</button>
+      </div>
+    </header>
+
+    <form id="markForm" class="card">
+      <div class="field" data-group="question">
+        <div class="field-head">
+          <label class="field-label">Question</label>
+          <div class="segmented" data-toggle="question">
+            <button type="button" class="active" data-mode="text">Type it</button>
+            <button type="button" data-mode="file">Upload file</button>
+          </div>
+        </div>
+        <textarea class="mode-text" placeholder="e.g. How is GDP calculated and what does it indicate?"></textarea>
+        <div class="dropzone mode-file" tabindex="0" role="button" style="display:none" aria-label="Upload an image or PDF of the question">
+          <span class="dz-text">Drag a file here, or click to choose one</span>
+          <div class="dz-hint hint">Image or PDF</div>
+          <input type="file" accept="image/*,application/pdf" style="display:none" />
+          <div class="dz-preview"></div>
+        </div>
+      </div>
+
+      <div class="field" data-group="markScheme">
+        <div class="field-head">
+          <label class="field-label">Mark scheme</label>
+          <div class="segmented" data-toggle="markScheme">
+            <button type="button" class="active" data-mode="text">Type it</button>
+            <button type="button" data-mode="file">Upload file</button>
+          </div>
+        </div>
+        <textarea class="mode-text" placeholder="e.g. 1 mark: production, income, expenditure methods. 2 marks: explains GDP as an indicator of economic wellbeing."></textarea>
+        <div class="dropzone mode-file" tabindex="0" role="button" style="display:none" aria-label="Upload an image or PDF of the mark scheme">
+          <span class="dz-text">Drag a file here, or click to choose one</span>
+          <div class="dz-hint hint">Image or PDF</div>
+          <input type="file" accept="image/*,application/pdf" style="display:none" />
+          <div class="dz-preview"></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-head"><label class="field-label" for="totalMarks">Total marks</label></div>
+        <div class="total-marks-row"><input type="number" id="totalMarks" min="1" value="3" required /></div>
+      </div>
+
+      <div class="field" data-group="answer">
+        <div class="field-head">
+          <label class="field-label">Student's answer</label>
+          <div class="segmented" data-toggle="answer">
+            <button type="button" data-mode="text">Type it</button>
+            <button type="button" class="active" data-mode="file">Upload file</button>
+          </div>
+        </div>
+        <textarea class="mode-text" style="display:none" placeholder="Type or paste the student's answer here..."></textarea>
+        <div class="dropzone mode-file" tabindex="0" role="button" aria-label="Upload an image or PDF of the student's answer">
+          <span class="dz-text">Drag a file here, or click to choose one</span>
+          <div class="dz-hint hint">Image or PDF — handwritten answers work best as a clear photo</div>
+          <input type="file" accept="image/*,application/pdf" style="display:none" />
+          <div class="dz-preview"></div>
+        </div>
+      </div>
+
+      <button type="submit" class="submit" id="submitBtn">Mark this answer</button>
+      <div class="error" id="errorMsg"></div>
+      <div class="loading" id="loading"><span class="bars"><span></span><span></span><span></span></span>Grading in progress</div>
+    </form>
+
+    <div class="results" id="results">
+      <div class="score-card">
+        <div class="ring-wrap">
+          <svg viewBox="0 0 108 108">
+            <defs>
+              <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#6C8CFF" />
+                <stop offset="100%" stop-color="#6EE7D8" />
+              </linearGradient>
+            </defs>
+            <circle class="ring-track" cx="54" cy="54" r="46" />
+            <circle class="ring-fill" id="ringFill" cx="54" cy="54" r="46" />
+          </svg>
+          <div class="ring-num"><span class="n" id="scoreNum">0</span><span class="d" id="scoreMax">/ 0</span></div>
+        </div>
+        <div class="score-summary">
+          <div class="label">Feedback</div>
+          <div class="feedback" id="overallFeedback"></div>
+        </div>
+      </div>
+      <div class="breakdown" id="breakdownList"></div>
+      <details class="ocr" id="ocrDetails">
+        <summary>What we read from the handwriting</summary>
+        <pre id="ocrText"></pre>
+      </details>
+    </div>
+
+    <div class="history-section">
+      <div class="history-head"><h2>Past marks</h2></div>
+      <div id="historyList"></div>
+    </div>
+  </div>
+
 </div>
 
 <script>
-  const API_BASE = "http://localhost:8000"; // swap this for your Cloud Run URL once deployed
+  const API_BASE = "http://localhost:8000"; // swap for your Cloud Run URL once deployed
+  const DUMMY_PASSWORD = "leafhacks26-demo-password"; // never shown to the user - just satisfies the backend's real auth
 
   const FILE_ICON = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>`;
 
-  // ---- Segmented toggles (text vs file mode) ----
-  document.querySelectorAll('.segmented').forEach(seg => {
+  // ---------------- Dummy auth ----------------
+  const authScreen = document.getElementById('authScreen');
+  const appScreen = document.getElementById('appScreen');
+  const authForm = document.getElementById('authForm');
+  const authError = document.getElementById('authError');
+  const authSubmitBtn = document.getElementById('authSubmitBtn');
+
+  let sessionToken = null;
+  let sessionName = null;
+
+  function nameToEmail(name) {
+    const slug = name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+    return `${slug}@leafhacks26.local`;
+  }
+
+  async function continueAsUser(name) {
+    const email = nameToEmail(name);
+    const body = JSON.stringify({ email, password: DUMMY_PASSWORD });
+    const headers = { 'Content-Type': 'application/json' };
+
+    let res = await fetch(`${API_BASE}/login`, { method: 'POST', headers, body });
+    if (!res.ok) {
+      res = await fetch(`${API_BASE}/signup`, { method: 'POST', headers, body });
+    }
+    if (!res.ok) throw new Error("Couldn't continue with that name — try a different one.");
+    return res.json(); // { token, email }
+  }
+
+  function enterApp(name, token) {
+    sessionName = name;
+    sessionToken = token;
+    localStorage.setItem('markup_session', JSON.stringify({ name, token }));
+    authScreen.style.display = 'none';
+    appScreen.style.display = 'block';
+    document.getElementById('userName').textContent = name;
+    loadHistory();
+  }
+
+  authForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    authError.style.display = 'none';
+    const name = document.getElementById('authName').value.trim();
+    const password = document.getElementById('authPassword').value;
+    if (!name) return;
+
+    if (password !== name) {
+      authError.textContent = "Incorrect username or password.";
+      authError.style.display = 'block';
+      return;
+    }
+
+    authSubmitBtn.disabled = true;
+    try {
+      const data = await continueAsUser(name);
+      enterApp(name, data.token);
+    } catch (err) {
+      authError.textContent = err.message || "Something went wrong. Please try again.";
+      authError.style.display = 'block';
+    } finally {
+      authSubmitBtn.disabled = false;
+    }
+  });
+
+  document.getElementById('signOutBtn').addEventListener('click', () => {
+    localStorage.removeItem('markup_session');
+    sessionToken = null;
+    sessionName = null;
+    authForm.reset();
+    authScreen.style.display = 'block';
+    appScreen.style.display = 'none';
+  });
+
+  // Restore session on page load, if there is one
+  (function restoreSession() {
+    const saved = localStorage.getItem('markup_session');
+    if (saved) {
+      try {
+        const { name, token } = JSON.parse(saved);
+        if (name && token) enterApp(name, token);
+      } catch { /* ignore corrupted storage */ }
+    }
+  })();
+
+  function authHeader() {
+    return { Authorization: `Bearer ${sessionToken}` };
+  }
+
+  // ---------------- Marking form ----------------
+  document.querySelectorAll('.segmented[data-toggle]').forEach(seg => {
     const group = seg.closest('.field');
     seg.querySelectorAll('button').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -457,8 +532,7 @@
     });
   });
 
-  // ---- Generic dropzone wiring (images preview as thumbnails, PDFs show a file chip) ----
-  const fileState = {}; // group name -> File
+  const fileState = {};
 
   document.querySelectorAll('.dropzone').forEach(dz => {
     const group = dz.closest('.field').dataset.group;
@@ -467,53 +541,36 @@
     const previewEl = dz.querySelector('.dz-preview');
 
     dz.addEventListener('click', () => input.click());
-    dz.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
-    });
-    ['dragover', 'dragenter'].forEach(evt =>
-      dz.addEventListener(evt, (e) => { e.preventDefault(); dz.classList.add('dragover'); })
-    );
-    ['dragleave', 'drop'].forEach(evt =>
-      dz.addEventListener(evt, (e) => { e.preventDefault(); dz.classList.remove('dragover'); })
-    );
-    dz.addEventListener('drop', (e) => {
-      const file = e.dataTransfer.files[0];
-      if (file) setFile(file);
-    });
-    input.addEventListener('change', () => {
-      if (input.files[0]) setFile(input.files[0]);
-    });
+    dz.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
+    ['dragover', 'dragenter'].forEach(evt => dz.addEventListener(evt, (e) => { e.preventDefault(); dz.classList.add('dragover'); }));
+    ['dragleave', 'drop'].forEach(evt => dz.addEventListener(evt, (e) => { e.preventDefault(); dz.classList.remove('dragover'); }));
+    dz.addEventListener('drop', (e) => { const f = e.dataTransfer.files[0]; if (f) setFile(f); });
+    input.addEventListener('change', () => { if (input.files[0]) setFile(input.files[0]); });
 
     function setFile(file) {
       fileState[group] = file;
       textEl.textContent = file.name;
-
       if (file.type === 'application/pdf') {
         previewEl.innerHTML = `<div class="file-chip">${FILE_ICON}<span>${file.name}</span></div>`;
       } else {
         const reader = new FileReader();
-        reader.onload = (e) => {
-          previewEl.innerHTML = `<img src="${e.target.result}" alt="Preview" />`;
-        };
+        reader.onload = (e) => { previewEl.innerHTML = `<img src="${e.target.result}" alt="Preview" />`; };
         reader.readAsDataURL(file);
       }
     }
   });
 
-  // ---- Submit ----
   const form = document.getElementById('markForm');
   const submitBtn = document.getElementById('submitBtn');
   const loading = document.getElementById('loading');
   const results = document.getElementById('results');
   const errorMsg = document.getElementById('errorMsg');
 
-  function activeMode(groupName) {
-    const seg = document.querySelector(`.segmented[data-toggle="${groupName}"]`);
-    return seg.querySelector('button.active').dataset.mode;
+  function activeMode(name) {
+    return document.querySelector(`.segmented[data-toggle="${name}"] button.active`).dataset.mode;
   }
-
-  function textValueOf(groupName) {
-    return form.querySelector(`[data-group="${groupName}"] textarea`).value.trim();
+  function textValueOf(name) {
+    return form.querySelector(`[data-group="${name}"] textarea`).value.trim();
   }
 
   form.addEventListener('submit', async (e) => {
@@ -521,55 +578,32 @@
     errorMsg.style.display = 'none';
     results.style.display = 'none';
 
-    const modes = {
-      question: activeMode('question'),
-      markScheme: activeMode('markScheme'),
-      answer: activeMode('answer'),
-    };
-
+    const modes = { question: activeMode('question'), markScheme: activeMode('markScheme'), answer: activeMode('answer') };
     const labels = { question: 'the question', markScheme: 'the mark scheme', answer: "the student's answer" };
 
     for (const key of ['question', 'markScheme', 'answer']) {
-      if (modes[key] === 'text' && !textValueOf(key)) {
-        return showError(`Add ${labels[key]} — type it or switch to upload a file.`);
-      }
-      if (modes[key] === 'file' && !fileState[key]) {
-        return showError(`Upload a file for ${labels[key]}, or switch to type it.`);
-      }
+      if (modes[key] === 'text' && !textValueOf(key)) return showError(`Add ${labels[key]} — type it or switch to upload a file.`);
+      if (modes[key] === 'file' && !fileState[key]) return showError(`Upload a file for ${labels[key]}, or switch to type it.`);
     }
 
     const formData = new FormData();
     formData.append('total_marks', document.getElementById('totalMarks').value);
-
-    if (modes.question === 'text') {
-      formData.append('question_text', textValueOf('question'));
-    } else {
-      formData.append('question_file', fileState.question);
-    }
-
-    if (modes.markScheme === 'text') {
-      formData.append('mark_scheme_text', textValueOf('markScheme'));
-    } else {
-      formData.append('mark_scheme_file', fileState.markScheme);
-    }
-
-    if (modes.answer === 'text') {
-      formData.append('answer_text', textValueOf('answer'));
-    } else {
-      formData.append('answer_file', fileState.answer);
-    }
+    formData.append(modes.question === 'text' ? 'question_text' : 'question_file', modes.question === 'text' ? textValueOf('question') : fileState.question);
+    formData.append(modes.markScheme === 'text' ? 'mark_scheme_text' : 'mark_scheme_file', modes.markScheme === 'text' ? textValueOf('markScheme') : fileState.markScheme);
+    formData.append(modes.answer === 'text' ? 'answer_text' : 'answer_file', modes.answer === 'text' ? textValueOf('answer') : fileState.answer);
 
     submitBtn.disabled = true;
     loading.style.display = 'block';
 
     try {
-      const res = await fetch(`${API_BASE}/mark`, { method: 'POST', body: formData });
+      const res = await fetch(`${API_BASE}/mark`, { method: 'POST', headers: authHeader(), body: formData });
       if (!res.ok) {
         const detail = await res.json().catch(() => null);
         throw new Error(detail?.detail || `Server responded with ${res.status}`);
       }
       const data = await res.json();
       renderResults(data);
+      loadHistory();
     } catch (err) {
       showError(err.message || "Couldn't mark that answer — check your files are clear and the server is running, then try again.");
     } finally {
@@ -578,10 +612,7 @@
     }
   });
 
-  function showError(msg) {
-    errorMsg.textContent = msg;
-    errorMsg.style.display = 'block';
-  }
+  function showError(msg) { errorMsg.textContent = msg; errorMsg.style.display = 'block'; }
 
   function renderResults(data) {
     document.getElementById('scoreNum').textContent = data.total_score;
@@ -594,32 +625,11 @@
     ring.style.strokeDashoffset = `${circumference}`;
     ring.getBoundingClientRect();
     ring.style.transition = 'stroke-dashoffset 0.8s ease-out';
-    requestAnimationFrame(() => {
-      ring.style.strokeDashoffset = `${circumference * (1 - fraction)}`;
-    });
+    requestAnimationFrame(() => { ring.style.strokeDashoffset = `${circumference * (1 - fraction)}`; });
 
     const list = document.getElementById('breakdownList');
     list.innerHTML = '';
-    (data.breakdown || []).forEach(item => {
-      const full = item.awarded >= item.max;
-      const zero = item.awarded === 0;
-      const color = full ? 'var(--success)' : (zero ? 'var(--danger)' : 'var(--amber)');
-      const icon = full
-        ? `<svg class="mark-icon" viewBox="0 0 22 22"><circle cx="11" cy="11" r="10" fill="none" stroke="${color}" stroke-width="1.5"/><path d="M6 11l3.2 3.2L16 7.5" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
-        : `<svg class="mark-icon" viewBox="0 0 22 22"><circle cx="11" cy="11" r="10" fill="none" stroke="${color}" stroke-width="1.5"/><path d="M7.5 7.5l7 7M14.5 7.5l-7 7" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round"/></svg>`;
-
-      const row = document.createElement('div');
-      row.className = 'breakdown-item';
-      row.innerHTML = `
-        ${icon}
-        <div>
-          <span class="criterion-text">${escapeHtml(item.criterion)}</span>
-          <span class="criterion-score">${item.awarded}/${item.max}</span>
-          <div class="criterion-comment">${escapeHtml(item.comment)}</div>
-        </div>
-      `;
-      list.appendChild(row);
-    });
+    (data.breakdown || []).forEach(item => list.appendChild(breakdownRow(item)));
 
     document.getElementById('overallFeedback').textContent = data.overall_feedback || '';
 
@@ -635,10 +645,73 @@
     results.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  function breakdownRow(item) {
+    const full = item.awarded >= item.max;
+    const zero = item.awarded === 0;
+    const color = full ? 'var(--success)' : (zero ? 'var(--danger)' : 'var(--amber)');
+    const icon = full
+      ? `<svg class="mark-icon" viewBox="0 0 22 22"><circle cx="11" cy="11" r="10" fill="none" stroke="${color}" stroke-width="1.5"/><path d="M6 11l3.2 3.2L16 7.5" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
+      : `<svg class="mark-icon" viewBox="0 0 22 22"><circle cx="11" cy="11" r="10" fill="none" stroke="${color}" stroke-width="1.5"/><path d="M7.5 7.5l7 7M14.5 7.5l-7 7" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round"/></svg>`;
+    const row = document.createElement('div');
+    row.className = 'breakdown-item';
+    row.innerHTML = `
+      ${icon}
+      <div>
+        <span class="criterion-text">${escapeHtml(item.criterion)}</span>
+        <span class="criterion-score">${item.awarded}/${item.max}</span>
+        <div class="criterion-comment">${escapeHtml(item.comment)}</div>
+      </div>`;
+    return row;
+  }
+
   function escapeHtml(str) {
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
+  }
+
+  // ---------------- History ----------------
+  async function loadHistory() {
+    const listEl = document.getElementById('historyList');
+    listEl.innerHTML = `<div class="history-empty">Loading…</div>`;
+    try {
+      const res = await fetch(`${API_BASE}/history`, { headers: authHeader() });
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      const items = data.results || [];
+
+      if (items.length === 0) {
+        listEl.innerHTML = `<div class="history-empty">No marked answers yet — your results will show up here.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = '';
+      items.forEach((item) => {
+        const row = document.createElement('div');
+        row.className = 'history-item';
+        const date = item.created_at ? new Date(item.created_at).toLocaleString() : '';
+        row.innerHTML = `
+          <div class="hi-left">
+            <div class="hi-feedback">${escapeHtml(item.overall_feedback || 'Marked answer')}</div>
+            <div class="hi-date">${date}</div>
+          </div>
+          <div class="hi-score">${item.total_score}/${item.max_score}</div>
+        `;
+
+        const detail = document.createElement('div');
+        detail.className = 'history-detail breakdown';
+        (item.breakdown || []).forEach(b => detail.appendChild(breakdownRow(b)));
+
+        row.addEventListener('click', () => {
+          detail.style.display = detail.style.display === 'block' ? 'none' : 'block';
+        });
+
+        listEl.appendChild(row);
+        listEl.appendChild(detail);
+      });
+    } catch {
+      listEl.innerHTML = `<div class="history-empty">Couldn't load your history right now.</div>`;
+    }
   }
 </script>
 </body>
