@@ -1082,11 +1082,11 @@
     document.getElementById('markPanel').hidden = tab !== 'mark';
     document.getElementById('practicePanel').hidden = tab !== 'practice';
     document.getElementById('tagline').textContent = TAGLINES[tab];
-    document.querySelectorAll('.site-nav button').forEach(btn => {
+    document.querySelectorAll('.app-tabs button').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.tab === tab);
     });
   }
-  document.querySelectorAll('.site-nav button').forEach(btn => {
+  document.querySelectorAll('.app-tabs button').forEach(btn => {
     btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
 
@@ -1617,24 +1617,31 @@
       breakIntervalId: null,
     };
 
-    timerMeta.textContent = extraPct > 0 ? `Includes ${extraPct}% extra time` : '';
-    breakCounterEl.textContent = '0';
-    applyOverlay();
+    try {
+      timerMeta.textContent = extraPct > 0 ? `Includes ${extraPct}% extra time` : '';
+      breakCounterEl.textContent = '0';
+      applyOverlay();
 
-    await renderExamPaper(examPaperFile);
+      await renderExamPaper(examPaperFile);
 
-    // Disable tab switching while a practice exam is in progress
-    document.querySelectorAll('.site-nav button').forEach(b => b.disabled = true);
+      // Disable tab switching while a practice exam is in progress
+      document.querySelectorAll('.app-tabs button').forEach(b => b.disabled = true);
 
-    // The exam shell — and the timer inside it — only become visible here,
-    // right before the countdown interval is created. Nothing before this
-    // point ever shows the shell or starts a timer.
-    timerDisplay.textContent = formatTime(exam.remainingSeconds);
-    timerDisplay.classList.remove('low-time');
-    examShell.classList.add('active');
-    examShell.setAttribute('aria-hidden', 'false');
+      // The exam shell — and the timer inside it — only become visible here,
+      // right before the countdown interval is created. Nothing before this
+      // point ever shows the shell or starts a timer.
+      timerDisplay.textContent = formatTime(exam.remainingSeconds);
+      timerDisplay.classList.remove('low-time');
+      examShell.classList.add('active');
+      examShell.setAttribute('aria-hidden', 'false');
 
-    exam.intervalId = setInterval(tickExam, 1000);
+      exam.intervalId = setInterval(tickExam, 1000);
+    } catch (err) {
+      console.error('Failed to start practice exam:', err);
+      setupError.textContent = `Couldn't start the exam: ${err.message || 'unknown error'}. Check the browser console for details.`;
+      setupError.style.display = 'block';
+      exam = null;
+    }
   });
 
   function tickExam() {
@@ -1700,7 +1707,7 @@
 
     examShell.classList.remove('active');
     examShell.setAttribute('aria-hidden', 'true');
-    document.querySelectorAll('.site-nav button').forEach(b => b.disabled = false);
+    document.querySelectorAll('.app-tabs button').forEach(b => b.disabled = false);
 
     setupPanel.style.display = 'none';
     finishedPanel.classList.add('active');
