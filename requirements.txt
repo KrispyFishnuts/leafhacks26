@@ -6,3 +6,7 @@ python-multipart
 pytest
 httpx
 google-cloud-vision
+sqlalchemy
+passlib[bcrypt]
+python-jose[cryptography]
+google-cloud-texttospeech

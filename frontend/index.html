@@ -5,21 +5,35 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Paramark — AI Exam Marker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0B0E14;
-    --surface: #131720;
-    --surface-2: #1B212D;
-    --border: #262D3A;
-    --text: #ECEEF3;
-    --text-dim: #8B93A7;
-    --text-faint: #565E6E;
-    --accent-a: #6C8CFF;
-    --accent-b: #6EE7D8;
-    --success: #4ADE80;
-    --danger: #F87171;
-    --amber: #FBBF24;
+    --bg: #FFFFFF;
+    --surface: #FFFFFF;
+    --surface-2: #F7F7F7;
+    --border: #E8E8E8;
+    --text: #1A1A1A;
+    --text-dim: #6B6B6B;
+    --text-faint: #999999;
+    --green: #00C805;
+    --green-dark: #00A804;
+    --green-light: #E8FBE9;
+    --success: #00C805;
+    --danger: #E02424;
+    --amber: #D97706;
+
+    /* Practice-exam focus mode: a deliberate dark takeover, distinct
+       from the rest of the (light) app, to feel like the lights have
+       dimmed for a timed exam. */
+    --focus-bg: #0B0E14;
+    --focus-surface: #131720;
+    --focus-surface-2: #1B212D;
+    --focus-border: #262D3A;
+    --focus-text: #ECEEF3;
+    --focus-text-dim: #8B93A7;
+    --focus-text-faint: #565E6E;
+    --focus-accent-a: #6C8CFF;
+    --focus-accent-b: #6EE7D8;
   }
 
   * { box-sizing: border-box; }
@@ -27,114 +41,289 @@
   body {
     margin: 0;
     min-height: 100vh;
-    background:
-      radial-gradient(600px circle at 15% -5%, rgba(108,140,255,0.08), transparent 60%),
-      radial-gradient(600px circle at 90% 10%, rgba(110,231,216,0.06), transparent 60%),
-      var(--bg);
+    background: var(--bg);
     color: var(--text);
-    font-family: 'Inter', sans-serif;
-    padding: 56px 20px 100px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
   }
 
-  .wrap { max-width: 620px; margin: 0 auto; }
-
-  header.app-header {
+  /* ── Site header ── */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 56px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 36px;
-    flex-wrap: wrap;
-    gap: 12px;
   }
 
-  .logo {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: 1.7rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .logo .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent-a), var(--accent-b));
-    box-shadow: 0 0 14px rgba(110,231,216,0.5);
-  }
-  .tagline {
-    margin-top: 8px;
-    font-size: 0.92rem;
-    color: var(--text-dim);
-  }
-
-  .account-chip {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.82rem;
-    color: var(--text-dim);
-  }
-  .account-chip .name { color: var(--text); font-weight: 500; }
-  .link-btn {
-    background: none;
-    border: none;
-    color: var(--text-dim);
+  .site-logo {
     font-family: 'Inter', sans-serif;
-    font-size: 0.82rem;
-    text-decoration: underline;
-    cursor: pointer;
-    padding: 0;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--green);
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
   }
-  .link-btn:hover { color: var(--text); }
-  .link-btn:focus-visible { outline: 2px solid var(--accent-b); outline-offset: 2px; }
+  .site-logo svg { flex-shrink: 0; }
+
+  .site-nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  .site-nav a {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .site-nav a:hover { color: var(--text); }
+
+  .btn-green {
+    background: var(--green);
+    color: #fff;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 9px 20px;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: background 0.15s;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-green:hover { background: var(--green-dark); }
+  .btn-green:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+  .btn-green:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── Landing page ── */
+  .landing { display: block; }
+
+  .hero-banner {
+    background: var(--green);
+    overflow: hidden;
+    position: relative;
+    min-height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero-banner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 20% 50%, rgba(255,255,255,0.12), transparent),
+      radial-gradient(ellipse 50% 60% at 80% 30%, rgba(0,0,0,0.06), transparent);
+    pointer-events: none;
+  }
+  .hero-inner {
+    position: relative;
+    max-width: 900px;
+    width: 100%;
+    padding: 48px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .hero-title {
+    font-family: 'Newsreader', Georgia, serif;
+    font-weight: 700;
+    font-size: clamp(2.4rem, 5vw, 3.6rem);
+    color: #fff;
+    line-height: 1.1;
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+  .hero-word {
+    display: inline-block;
+    min-width: 9.5ch;
+    text-align: left;
+  }
+  .hero-word::after {
+    content: '|';
+    font-weight: 400;
+    margin-left: 1px;
+    animation: cursor-blink 1s step-end infinite;
+  }
+  @keyframes cursor-blink { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-word::after { animation: none; opacity: 0.6; }
+  }
+  .hero-sub {
+    margin-top: 12px;
+    font-size: 1.05rem;
+    color: rgba(255,255,255,0.85);
+    max-width: 340px;
+    line-height: 1.5;
+  }
+  .hero-illustration {
+    flex-shrink: 0;
+    width: min(320px, 45vw);
+    height: auto;
+  }
+
+  /* Mission section */
+  .mission {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 64px 32px;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 56px;
+    align-items: center;
+  }
+  .mission-photo { margin: 0; width: 100%; }
+  .mission-photo-frame {
+    padding: 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow: 0 0 0 3px var(--green-light), 0 8px 32px rgba(0, 0, 0, 0.08);
+    position: relative;
+    aspect-ratio: 4 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .mission-photo-frame::after {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border: 2px solid var(--green);
+    border-radius: 2px;
+    pointer-events: none;
+    opacity: 0.35;
+  }
+  .mission-photo-frame img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 2px; }
+  .mission-photo-placeholder {
+    width: 100%; height: 100%;
+    background: linear-gradient(135deg, var(--green-light), var(--surface-2));
+    display: flex; align-items: center; justify-content: center;
+    color: var(--green-dark); font-family: 'Newsreader', Georgia, serif; font-size: 0.95rem; text-align: center; padding: 20px;
+  }
+  .mission-photo figcaption {
+    padding: 18px 4px 0;
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text);
+    text-align: center;
+    letter-spacing: -0.01em;
+  }
+  .mission-text .eyebrow {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 16px;
+  }
+  .mission-text h2 {
+    font-family: 'Newsreader', Georgia, serif;
+    font-weight: 700;
+    font-size: clamp(1.8rem, 3.5vw, 2.3rem);
+    line-height: 1.2;
+    margin: 0 0 20px;
+    letter-spacing: -0.02em;
+    text-align: left;
+  }
+  .mission-text p {
+    font-size: 1rem;
+    color: var(--text-dim);
+    line-height: 1.75;
+    margin: 0 0 16px;
+    text-align: left;
+  }
+  .mission-text p:last-of-type { margin-bottom: 0; }
+  .mission-stat {
+    margin-top: 24px;
+    padding: 20px 22px;
+    background: var(--green-light);
+    border-left: 3px solid var(--green);
+    border-radius: 0 8px 8px 0;
+    font-size: 0.92rem;
+    color: var(--text);
+    line-height: 1.65;
+    text-align: left;
+  }
+  .mission-stat strong { color: var(--text); font-weight: 600; }
+
+  /* Feature strip - what the app actually does, since we now have three features */
+  .features {
+    background: var(--surface-2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 56px 32px;
+  }
+  .features-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 24px;
+  }
+  .feature-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: var(--green-light);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+  }
+  .feature-card h3 {
+    font-family: 'Newsreader', Georgia, serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 0 0 8px;
+  }
+  .feature-card p { font-size: 0.9rem; color: var(--text-dim); line-height: 1.6; margin: 0; }
+
+  /* Sign-in section */
+  .signin-section {
+    background: var(--surface-2);
+    border-top: 1px solid var(--border);
+    padding: 64px 32px 80px;
+  }
+  .signin-inner { max-width: 400px; margin: 0 auto; text-align: center; }
+  .signin-inner h2 { font-family: 'Newsreader', Georgia, serif; font-size: 1.6rem; font-weight: 700; margin: 0 0 8px; }
+  .signin-inner .signin-desc { font-size: 0.92rem; color: var(--text-dim); margin-bottom: 28px; }
 
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: 12px;
     padding: 28px;
+    text-align: left;
   }
 
-  .field { margin-bottom: 24px; }
-  .field:last-child { margin-bottom: 0; }
-
-  .field-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
+  .auth-field { margin-bottom: 18px; }
+  .auth-field label {
+    display: block; font-size: 0.78rem; font-weight: 600; color: var(--text-dim);
+    margin-bottom: 6px; letter-spacing: 0.02em;
   }
-
-  label.field-label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    color: var(--text-dim);
-  }
-
-  .segmented {
-    display: inline-flex;
-    background: var(--surface-2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 2px;
-    gap: 2px;
-  }
-  .segmented button {
-    border: none;
-    background: transparent;
-    color: var(--text-faint);
-    font-family: 'Inter', sans-serif;
-    font-size: 0.76rem;
-    font-weight: 600;
-    padding: 5px 11px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.15s ease, color 0.15s ease;
-  }
-  .segmented button.active { background: var(--surface); color: var(--text); }
-  .segmented button:focus-visible { outline: 2px solid var(--accent-b); outline-offset: 1px; }
 
   input[type="text"],
   input[type="password"],
@@ -145,121 +334,190 @@
     font-size: 0.92rem;
     padding: 11px 13px;
     border: 1px solid var(--border);
-    border-radius: 9px;
-    background: var(--surface-2);
+    border-radius: 8px;
+    background: var(--bg);
     color: var(--text);
+    transition: border-color 0.15s;
+  }
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(0,200,5,0.12);
   }
   textarea { min-height: 80px; resize: vertical; }
   input::placeholder, textarea::placeholder { color: var(--text-faint); }
 
-  input:focus, textarea:focus, button:focus-visible, .dropzone:focus-visible {
-    outline: 2px solid var(--accent-b);
-    outline-offset: 2px;
+  button.submit {
+    margin-top: 6px;
+    width: 100%;
+    background: var(--green);
+    color: #fff;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 13px;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: background 0.15s, opacity 0.15s;
+  }
+  button.submit:hover { background: var(--green-dark); }
+  button.submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  button.secondary {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 0.88rem;
+    padding: 10px 16px;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  button.secondary:hover { border-color: var(--text-faint); }
+  button.secondary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .error { margin-top: 14px; color: var(--danger); font-size: 0.87rem; display: none; }
+
+  .site-footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 32px;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--text-faint);
   }
 
-  .dropzone {
-    border: 1.5px dashed var(--border);
-    border-radius: 10px;
-    padding: 18px;
-    text-align: center;
-    cursor: pointer;
-    color: var(--text-faint);
-    font-size: 0.85rem;
-    transition: border-color 0.15s ease, background 0.15s ease;
+  /* ── App screen ── */
+  .app-wrap { max-width: 640px; margin: 0 auto; padding: 40px 20px 100px; }
+
+  .app-intro { margin-bottom: 24px; }
+  .app-intro .tagline { font-size: 0.95rem; color: var(--text-dim); }
+
+  .account-chip { display: flex; align-items: center; gap: 10px; font-size: 0.82rem; color: var(--text-dim); }
+  .account-chip .name { color: var(--text); font-weight: 500; }
+  .link-btn {
+    background: none; border: none; color: var(--green);
+    font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 500;
+    cursor: pointer; padding: 0;
   }
-  .dropzone.dragover { border-color: var(--accent-b); background: rgba(110,231,216,0.05); }
+  .link-btn:hover { text-decoration: underline; }
+
+  /* App-level tabs (Mark answers / Practice exam) */
+  .app-tabs { display: flex; gap: 8px; margin-bottom: 28px; }
+  .app-tabs button {
+    font-size: 0.85rem; font-weight: 600; font-family: 'Inter', sans-serif;
+    color: var(--text-dim); padding: 9px 18px; border-radius: 24px;
+    border: 1px solid var(--border); background: var(--surface); cursor: pointer;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+  }
+  .app-tabs button:hover:not(:disabled) { border-color: var(--text-faint); }
+  .app-tabs button.active { color: #fff; background: var(--green); border-color: var(--green); }
+  .app-tabs button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .app-tabs button:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
+
+  .tab-panel[hidden] { display: none !important; }
+
+  .field { margin-bottom: 24px; }
+  .field:last-child { margin-bottom: 0; }
+  .field-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  label.field-label { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-dim); }
+  .field-hint { font-size: 0.78rem; color: var(--text-faint); margin-top: 6px; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .segmented {
+    display: inline-flex; background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 2px; gap: 2px;
+  }
+  .segmented button {
+    border: none; background: transparent; color: var(--text-faint);
+    font-family: 'Inter', sans-serif; font-size: 0.76rem; font-weight: 600;
+    padding: 5px 11px; border-radius: 6px; cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .segmented button.active { background: var(--bg); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .segmented button:focus-visible { outline: 2px solid var(--green); outline-offset: 1px; }
+
+  .dropzone {
+    border: 1.5px dashed var(--border); border-radius: 10px; padding: 18px;
+    text-align: center; cursor: pointer; color: var(--text-faint); font-size: 0.85rem;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .dropzone.dragover { border-color: var(--green); background: var(--green-light); }
   .dropzone img { max-width: 100%; max-height: 140px; border-radius: 6px; margin-top: 10px; }
   .dropzone .hint { font-size: 0.72rem; color: var(--text-faint); margin-top: 2px; }
 
   .file-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 10px;
-    padding: 8px 12px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-size: 0.8rem;
-    color: var(--text);
+    display: inline-flex; align-items: center; gap: 8px; margin-top: 10px;
+    padding: 8px 12px; background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 8px; font-size: 0.8rem; color: var(--text);
   }
-
-  .total-marks-row { display: flex; align-items: center; gap: 12px; }
-  .total-marks-row input { width: 90px; flex: none; }
-
-  button.submit {
-    margin-top: 6px;
-    width: 100%;
-    background: linear-gradient(135deg, var(--accent-a), var(--accent-b));
-    color: #0B0E14;
-    border: none;
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-    font-size: 1rem;
-    padding: 14px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: opacity 0.15s ease, transform 0.1s ease;
+  .file-chip-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; text-align: left; }
+  .file-chip-row {
+    display: flex; align-items: center; gap: 10px; padding: 8px 10px;
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px;
   }
-  button.submit:hover { opacity: 0.92; }
-  button.submit:active { transform: scale(0.99); }
-  button.submit:disabled { opacity: 0.5; cursor: not-allowed; }
+  .file-chip-row img { width: 36px; height: 36px; object-fit: cover; border-radius: 5px; flex: none; }
+  .file-chip-row .fc-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; flex: none; color: var(--text-faint); }
+  .file-chip-row .fc-name { flex: 1; font-size: 0.82rem; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .file-chip-row .fc-remove { background: none; border: none; color: var(--text-faint); cursor: pointer; font-size: 1rem; line-height: 1; padding: 4px; flex: none; }
+  .file-chip-row .fc-remove:hover { color: var(--danger); }
+  .file-chip-row .fc-remove:focus-visible { outline: 2px solid var(--green); outline-offset: 1px; }
 
-  .error {
-    margin-top: 14px;
-    color: var(--danger);
-    font-size: 0.87rem;
-    display: none;
+  .overlay-picker { display: flex; gap: 10px; flex-wrap: wrap; }
+  .overlay-swatch {
+    width: 68px; height: 42px; border-radius: 8px; border: 2px solid var(--border);
+    cursor: pointer; font-size: 0.72rem; font-weight: 600; color: var(--text-dim);
+    display: flex; align-items: center; justify-content: center; background: var(--surface-2);
+    transition: border-color 0.15s;
   }
+  .overlay-swatch:hover { border-color: var(--text-faint); }
+  .overlay-swatch.active { border-color: var(--green); }
+  .overlay-swatch.yellow { background: rgba(250, 204, 21, 0.25); color: #92720a; }
+  .overlay-swatch.blue { background: rgba(59, 130, 246, 0.2); color: #1d4ed8; }
+  .overlay-swatch.green { background: rgba(0, 200, 5, 0.15); color: var(--green-dark); }
+  .overlay-swatch:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
 
-  .loading {
-    display: none;
-    text-align: center;
-    margin-top: 24px;
-    font-size: 0.88rem;
-    color: var(--text-dim);
-  }
+  .loading { display: none; text-align: center; margin-top: 24px; font-size: 0.88rem; color: var(--text-dim); }
   .loading .bars { display: inline-flex; gap: 3px; margin-right: 8px; vertical-align: middle; }
-  .loading .bars span {
-    width: 3px; height: 12px; background: var(--accent-b); border-radius: 2px;
-    animation: pulse 0.9s ease-in-out infinite;
-  }
+  .loading .bars span { width: 3px; height: 12px; background: var(--green); border-radius: 2px; animation: pulse 0.9s ease-in-out infinite; }
   .loading .bars span:nth-child(2) { animation-delay: 0.15s; }
   .loading .bars span:nth-child(3) { animation-delay: 0.3s; }
   @keyframes pulse { 0%, 100% { transform: scaleY(0.4); opacity: 0.5; } 50% { transform: scaleY(1); opacity: 1; } }
 
-  /* Auth screen (dummy - name only, no password) */
-  .auth-screen { max-width: 400px; margin: 90px auto 0; }
-  .auth-field { margin-bottom: 18px; }
-  .auth-field label { display: block; font-size: 0.78rem; color: var(--text-dim); margin-bottom: 6px; }
-  .auth-hint { font-size: 0.78rem; color: var(--text-faint); margin-top: 14px; text-align: center; }
-
   /* Results */
   .results { display: none; margin-top: 28px; }
   .score-card {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
     padding: 32px 28px; display: flex; align-items: center; gap: 24px;
   }
   .ring-wrap { position: relative; width: 108px; height: 108px; flex: none; }
   .ring-wrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
   .ring-track { fill: none; stroke: var(--surface-2); stroke-width: 8; }
-  .ring-fill {
-    fill: none; stroke: url(#ringGradient); stroke-width: 8; stroke-linecap: round;
-    stroke-dasharray: 289; stroke-dashoffset: 289;
-  }
+  .ring-fill { fill: none; stroke: var(--green); stroke-width: 8; stroke-linecap: round; stroke-dasharray: 289; stroke-dashoffset: 289; }
   .ring-num { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; }
-  .ring-num .n { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.6rem; }
+  .ring-num .n { font-weight: 700; font-size: 1.6rem; }
   .ring-num .d { font-size: 0.68rem; color: var(--text-faint); }
-  .score-summary .label { font-size: 0.78rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .score-summary .label { font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
   .score-summary .feedback { font-size: 0.94rem; line-height: 1.5; color: var(--text); }
 
-  .breakdown { margin-top: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 8px 24px; }
+  .breakdown { margin-top: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 8px 24px; }
   .breakdown-item { display: flex; gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--border); }
   .breakdown-item:last-child { border-bottom: none; }
   .mark-icon { flex-shrink: 0; width: 22px; height: 22px; margin-top: 1px; }
   .criterion-text { font-weight: 600; font-size: 0.92rem; }
   .criterion-score { font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; color: var(--text-faint); margin-left: 8px; }
   .criterion-comment { font-size: 0.85rem; color: var(--text-dim); margin-top: 3px; }
+
+  .question-block { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 14px; }
+  .question-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .question-label { font-family: 'Newsreader', Georgia, serif; font-weight: 600; font-size: 1.05rem; }
+  .question-score { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 0.92rem; color: var(--text-dim); }
+  .question-feedback { font-size: 0.87rem; color: var(--text-dim); margin-top: 10px; line-height: 1.5; }
+  .question-block .breakdown { background: transparent; border: none; padding: 0; margin-top: 8px; }
+  .question-block .breakdown-item:first-child { padding-top: 4px; }
 
   details.ocr {
     margin-top: 16px; font-size: 0.82rem; color: var(--text-faint);
@@ -268,170 +526,468 @@
   details.ocr summary { cursor: pointer; outline: none; color: var(--text-dim); }
   details.ocr pre { white-space: pre-wrap; font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; margin: 10px 0 0; color: var(--text-faint); }
 
-  /* History */
+  /* History + progress chart */
   .history-section { margin-top: 40px; }
   .history-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-  .history-head h2 { font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 600; margin: 0; }
+  .history-head h2 { font-family: 'Newsreader', Georgia, serif; font-size: 1.15rem; font-weight: 600; margin: 0; }
   .history-empty { font-size: 0.85rem; color: var(--text-faint); padding: 20px 0; }
   .history-item {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
     padding: 14px 18px; margin-bottom: 10px; cursor: pointer;
     display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    transition: border-color 0.15s, background 0.15s;
   }
-  .history-item:hover { border-color: var(--accent-b); }
+  .history-item:hover { border-color: var(--green); }
+  .history-item.highlight { border-color: var(--green); background: var(--green-light); }
   .history-item .hi-left { display: flex; flex-direction: column; gap: 2px; }
   .history-item .hi-date { font-size: 0.74rem; color: var(--text-faint); }
   .history-item .hi-feedback { font-size: 0.85rem; color: var(--text-dim); max-width: 380px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .history-item .hi-score { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 0.95rem; color: var(--text); flex: none; }
+  .history-item .hi-score { font-weight: 600; font-size: 0.95rem; color: var(--text); flex: none; }
   .history-detail { display: none; margin-top: -2px; margin-bottom: 10px; }
 
+  .progress-chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px 12px; margin-bottom: 24px; }
+  .progress-svg { width: 100%; height: 160px; display: block; }
+  .progress-axis { stroke: var(--border); stroke-width: 1; }
+  .progress-line { stroke: var(--green); stroke-width: 2; fill: none; }
+  .progress-point { fill: var(--surface); stroke: var(--green-dark); stroke-width: 2; cursor: pointer; transition: fill 0.15s; }
+  .progress-point:hover, .progress-point:focus { fill: var(--green); outline: none; }
+  .progress-empty { font-size: 0.82rem; color: var(--text-faint); }
+
+  /* Finished panel (practice exam summary, still in the light theme) */
+  .finished-panel { display: none; }
+  .finished-panel.active { display: block; }
+  .finished-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 36px 28px; text-align: center; }
+  .finished-card h2 { font-family: 'Newsreader', Georgia, serif; margin: 0 0 6px; font-size: 1.4rem; }
+  .finished-card > p { color: var(--text-dim); font-size: 0.9rem; margin: 0; }
+  .finished-stats { display: flex; justify-content: center; gap: 32px; margin: 28px 0; flex-wrap: wrap; }
+  .stat-item { display: flex; flex-direction: column; gap: 4px; }
+  .stat-val { font-family: 'JetBrains Mono', monospace; font-size: 1.4rem; font-weight: 700; }
+  .stat-lbl { font-size: 0.72rem; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* ── Practice exam focus mode: intentionally dark, a full-screen
+     takeover distinct from the rest of the (light) app ── */
+  .exam-shell {
+    position: fixed; inset: 0; background: var(--focus-bg); z-index: 1000;
+    display: none; flex-direction: column; color: var(--focus-text);
+    font-family: 'Inter', sans-serif;
+  }
+  .exam-shell.active { display: flex; }
+  .exam-toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 24px; border-bottom: 1px solid var(--focus-border);
+    background: var(--focus-surface); flex-wrap: wrap; gap: 14px;
+  }
+  .timer-block { display: flex; flex-direction: column; }
+  .timer-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--focus-text-faint); }
+  .timer-display { font-family: 'JetBrains Mono', monospace; font-size: 1.7rem; font-weight: 700; color: var(--focus-text); }
+  .timer-display.low-time { color: #F87171; }
+  .timer-meta { font-size: 0.72rem; color: var(--focus-text-faint); min-height: 1em; }
+  .toolbar-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .overlay-toggle { display: flex; gap: 6px; background: var(--focus-surface-2); padding: 4px; border-radius: 8px; border: 1px solid var(--focus-border); }
+  .overlay-toggle button { width: 26px; height: 26px; border-radius: 6px; border: 1.5px solid var(--focus-border); cursor: pointer; padding: 0; }
+  .overlay-toggle button[data-color="off"] { background: var(--focus-surface); }
+  .overlay-toggle button[data-color="yellow"] { background: #facc15; }
+  .overlay-toggle button[data-color="blue"] { background: #3b82f6; }
+  .overlay-toggle button[data-color="green"] { background: #4ade80; }
+  .overlay-toggle button.active { outline: 2px solid var(--focus-accent-b); outline-offset: 1px; }
+  .overlay-toggle button:focus-visible { outline: 2px solid var(--focus-accent-b); outline-offset: 1px; }
+  .exam-shell button.secondary {
+    background: var(--focus-surface-2); color: var(--focus-text); border: 1px solid var(--focus-border);
+    border-radius: 9px;
+  }
+  .exam-shell button.secondary:hover { border-color: var(--focus-text-faint); }
+
+  .exam-viewport { flex: 1; overflow-y: auto; padding: 28px 20px; display: flex; justify-content: center; }
+  .exam-paper-wrap { position: relative; max-width: 900px; width: 100%; }
+  .exam-paper-wrap img,
+  .exam-page-canvas { display: block; width: 100%; height: auto; margin-bottom: 16px; border-radius: 6px; box-shadow: 0 4px 24px rgba(0,0,0,0.35); }
+  .color-overlay { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: multiply; border-radius: 6px; transition: background 0.2s ease; z-index: 5; }
+
+  .break-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 1100; }
+  .break-modal.active { display: flex; }
+  .break-card { background: var(--focus-surface); border: 1px solid var(--focus-border); border-radius: 16px; padding: 40px; text-align: center; max-width: 360px; color: var(--focus-text); }
+  .break-card h2 { font-family: 'Newsreader', Georgia, serif; margin: 0 0 8px; }
+  .break-card p { color: var(--focus-text-dim); font-size: 0.9rem; margin: 0 0 20px; }
+  .break-timer { font-family: 'JetBrains Mono', monospace; font-size: 2.4rem; font-weight: 700; margin-bottom: 24px; }
+  .break-card .submit { background: var(--focus-accent-b); color: #0B0E14; }
+  .break-card .submit:hover { opacity: 0.9; background: var(--focus-accent-b); }
+
   @media (prefers-reduced-motion: reduce) { .loading .bars span { animation: none; } }
-  @media (max-width: 480px) { .score-card { flex-direction: column; text-align: center; } }
+
+  @media (max-width: 768px) {
+    .site-nav a:not(.btn-green) { display: none; }
+    .hero-inner { flex-direction: column; text-align: center; padding: 40px 24px; }
+    .hero-sub { margin-left: auto; margin-right: auto; }
+    .mission { grid-template-columns: 1fr; gap: 32px; padding: 48px 24px; }
+    .features-inner { grid-template-columns: 1fr; }
+    .score-card { flex-direction: column; text-align: center; }
+    .form-row { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <!-- ============ DUMMY AUTH SCREEN (name only, no password) ============ -->
-  <div id="authScreen" class="auth-screen">
-    <header style="margin-bottom: 28px; text-align: left;">
-      <div class="logo"><span class="dot"></span>Paramark</div>
-      <div class="tagline">Enter your name to start marking and keep your history.</div>
-    </header>
+<!-- ============ LANDING PAGE ============ -->
+<div id="authScreen" class="landing">
+  <header class="site-header">
+    <a class="site-logo" href="#">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 2L3 7v8l8 5 8-5V7L11 2z" stroke="#00C805" stroke-width="1.8" fill="none"/><path d="M8 11l2.5 2.5L14.5 9" stroke="#00C805" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Paramark
+    </a>
+    <nav class="site-nav">
+      <a href="#mission">Our mission</a>
+      <a href="#sign-in" class="btn-green" style="font-size:0.78rem;padding:7px 16px;">Sign in</a>
+    </nav>
+  </header>
 
-    <div class="card">
-      <form id="authForm">
-        <div class="auth-field">
-          <label for="authName">Username</label>
-          <input type="text" id="authName" placeholder="e.g. Jordan" required autocomplete="username" />
-        </div>
-        <div class="auth-field">
-          <label for="authPassword">Password</label>
-          <input type="password" id="authPassword" placeholder="••••••••" required autocomplete="current-password" />
-        </div>
-        <button type="submit" class="submit" id="authSubmitBtn">Sign in</button>
-        <div class="error" id="authError"></div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ============ MAIN APP (shown once "logged in") ============ -->
-  <div id="appScreen" style="display:none;">
-    <header class="app-header">
+  <section class="hero-banner">
+    <div class="hero-inner">
       <div>
-        <div class="logo"><span class="dot"></span>Paramark</div>
-        <div class="tagline">Type it or upload it — question, mark scheme, and answer.</div>
+        <h1 class="hero-title"><span class="hero-word" id="heroWord" aria-live="polite">Improving</span><br>education</h1>
+        <p class="hero-sub">Instant AI marking, performance tracking over time, and a full access-arrangements exam emulator — built for students who need more from revision.</p>
       </div>
-      <div class="account-chip">
-        <span class="name" id="userName"></span>
-        <button class="link-btn" id="signOutBtn">Switch user</button>
-      </div>
-    </header>
-
-    <form id="markForm" class="card">
-      <div class="field" data-group="question">
-        <div class="field-head">
-          <label class="field-label">Question</label>
-          <div class="segmented" data-toggle="question">
-            <button type="button" class="active" data-mode="text">Type it</button>
-            <button type="button" data-mode="file">Upload file</button>
-          </div>
-        </div>
-        <textarea class="mode-text" placeholder="e.g. How is GDP calculated and what does it indicate?"></textarea>
-        <div class="dropzone mode-file" tabindex="0" role="button" style="display:none" aria-label="Upload an image or PDF of the question">
-          <span class="dz-text">Drag a file here, or click to choose one</span>
-          <div class="dz-hint hint">Image or PDF</div>
-          <input type="file" accept="image/*,application/pdf" style="display:none" />
-          <div class="dz-preview"></div>
-        </div>
-      </div>
-
-      <div class="field" data-group="markScheme">
-        <div class="field-head">
-          <label class="field-label">Mark scheme</label>
-          <div class="segmented" data-toggle="markScheme">
-            <button type="button" class="active" data-mode="text">Type it</button>
-            <button type="button" data-mode="file">Upload file</button>
-          </div>
-        </div>
-        <textarea class="mode-text" placeholder="e.g. 1 mark: production, income, expenditure methods. 2 marks: explains GDP as an indicator of economic wellbeing."></textarea>
-        <div class="dropzone mode-file" tabindex="0" role="button" style="display:none" aria-label="Upload an image or PDF of the mark scheme">
-          <span class="dz-text">Drag a file here, or click to choose one</span>
-          <div class="dz-hint hint">Image or PDF</div>
-          <input type="file" accept="image/*,application/pdf" style="display:none" />
-          <div class="dz-preview"></div>
-        </div>
-      </div>
-
-      <div class="field">
-        <div class="field-head"><label class="field-label" for="totalMarks">Total marks</label></div>
-        <div class="total-marks-row"><input type="number" id="totalMarks" min="1" value="3" required /></div>
-      </div>
-
-      <div class="field" data-group="answer">
-        <div class="field-head">
-          <label class="field-label">Student's answer</label>
-          <div class="segmented" data-toggle="answer">
-            <button type="button" data-mode="text">Type it</button>
-            <button type="button" class="active" data-mode="file">Upload file</button>
-          </div>
-        </div>
-        <textarea class="mode-text" style="display:none" placeholder="Type or paste the student's answer here..."></textarea>
-        <div class="dropzone mode-file" tabindex="0" role="button" aria-label="Upload an image or PDF of the student's answer">
-          <span class="dz-text">Drag a file here, or click to choose one</span>
-          <div class="dz-hint hint">Image or PDF — handwritten answers work best as a clear photo</div>
-          <input type="file" accept="image/*,application/pdf" style="display:none" />
-          <div class="dz-preview"></div>
-        </div>
-      </div>
-
-      <button type="submit" class="submit" id="submitBtn">Mark this answer</button>
-      <div class="error" id="errorMsg"></div>
-      <div class="loading" id="loading"><span class="bars"><span></span><span></span><span></span></span>Grading in progress</div>
-    </form>
-
-    <div class="results" id="results">
-      <div class="score-card">
-        <div class="ring-wrap">
-          <svg viewBox="0 0 108 108">
-            <defs>
-              <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#6C8CFF" />
-                <stop offset="100%" stop-color="#6EE7D8" />
-              </linearGradient>
-            </defs>
-            <circle class="ring-track" cx="54" cy="54" r="46" />
-            <circle class="ring-fill" id="ringFill" cx="54" cy="54" r="46" />
-          </svg>
-          <div class="ring-num"><span class="n" id="scoreNum">0</span><span class="d" id="scoreMax">/ 0</span></div>
-        </div>
-        <div class="score-summary">
-          <div class="label">Feedback</div>
-          <div class="feedback" id="overallFeedback"></div>
-        </div>
-      </div>
-      <div class="breakdown" id="breakdownList"></div>
-      <details class="ocr" id="ocrDetails">
-        <summary>What we read from the handwriting</summary>
-        <pre id="ocrText"></pre>
-      </details>
+      <svg class="hero-illustration" viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="20" y="160" width="280" height="12" rx="4" fill="rgba(255,255,255,0.25)"/>
+        <rect x="40" y="118" width="72" height="14" rx="2" fill="#fff" opacity="0.9"/>
+        <rect x="44" y="104" width="68" height="14" rx="2" fill="#fff" opacity="0.75"/>
+        <rect x="48" y="90" width="64" height="14" rx="2" fill="#fff" opacity="0.6"/>
+        <rect x="130" y="100" width="90" height="60" rx="3" fill="#fff" opacity="0.95"/>
+        <line x1="175" y1="100" x2="175" y2="160" stroke="rgba(0,200,5,0.3)" stroke-width="1.5"/>
+        <line x1="140" y1="118" x2="168" y2="118" stroke="rgba(0,0,0,0.12)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="140" y1="128" x2="165" y2="128" stroke="rgba(0,0,0,0.1)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="140" y1="138" x2="160" y2="138" stroke="rgba(0,0,0,0.08)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="182" y1="118" x2="210" y2="118" stroke="rgba(0,0,0,0.12)" stroke-width="2" stroke-linecap="round"/>
+        <line x1="182" y1="128" x2="205" y2="128" stroke="rgba(0,0,0,0.1)" stroke-width="2" stroke-linecap="round"/>
+        <rect x="228" y="108" width="6" height="52" rx="1" fill="#FFD966" transform="rotate(8 231 134)"/>
+        <polygon points="231,108 234,100 237,108" fill="#E8C840" transform="rotate(8 234 104)"/>
+        <rect x="248" y="120" width="36" height="40" rx="4" fill="#fff" opacity="0.85"/>
+        <path d="M284 130 Q296 130 296 142 Q296 154 284 154" stroke="#fff" stroke-width="3" fill="none" opacity="0.85"/>
+        <ellipse cx="266" cy="120" rx="18" ry="4" fill="rgba(0,0,0,0.08)"/>
+        <rect x="100" y="60" width="4" height="40" fill="rgba(255,255,255,0.5)"/>
+        <path d="M82 60 Q102 40 122 60 Z" fill="rgba(255,255,255,0.7)"/>
+        <circle cx="260" cy="52" r="28" fill="#fff"/>
+        <text x="260" y="50" text-anchor="middle" font-family="Inter,sans-serif" font-weight="700" font-size="16" fill="#00C805">A+</text>
+        <text x="260" y="64" text-anchor="middle" font-family="Inter,sans-serif" font-size="8" fill="#999">marked</text>
+        <circle cx="60" cy="50" r="4" fill="rgba(255,255,255,0.3)"/>
+        <circle cx="180" cy="38" r="3" fill="rgba(255,255,255,0.2)"/>
+        <circle cx="300" cy="80" r="5" fill="rgba(255,255,255,0.25)"/>
+      </svg>
     </div>
+  </section>
 
-    <div class="history-section">
-      <div class="history-head"><h2>Past marks</h2></div>
-      <div id="historyList"></div>
+  <section class="mission" id="mission">
+    <figure class="mission-photo">
+      <div class="mission-photo-frame">
+        <img src="team-photo.jpeg" alt="The Paramark founding team" />
+      </div>
+      <figcaption>The Paramark team</figcaption>
+    </figure>
+    <div class="mission-text">
+      <div class="eyebrow">Our mission</div>
+      <h2>Better outcomes for students who learn differently</h2>
+      <p>Standard exam prep wasn't built for everyone. Students with dyslexia, ADHD, and other learning differences often face barriers that have nothing to do with how smart they are — slow feedback, inaccessible practice conditions, and tools that ignore how they actually learn.</p>
+      <p>Paramark exists to change that. One of our founders grew up struggling with dyslexia, and knows first-hand how much difference instant feedback and the right exam conditions can make. We're building the tools we wish we'd had.</p>
+      <div class="mission-stat">
+        Around <strong>6.3 million people in the UK have dyslexia</strong>, making up roughly 10% of the population. Of these, about 4% (over 2 million) experience severe dyslexia.
+      </div>
     </div>
-  </div>
+  </section>
 
+  <section class="features">
+    <div class="features-inner">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4" stroke="#00C805" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="9" stroke="#00C805" stroke-width="1.6"/></svg>
+        </div>
+        <h3>Instant marking</h3>
+        <p>Upload a question, mark scheme, and answer — typed, photographed, or as a PDF — and get a full breakdown in seconds.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 19V9M12 19V5M20 19v-7" stroke="#00C805" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Track your progress</h3>
+        <p>Every mark is saved automatically, charted over time, so you can see exactly where you're improving.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#00C805" stroke-width="1.6"/><path d="M12 7v5l3 3" stroke="#00C805" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Practice exam mode</h3>
+        <p>Simulate real access arrangements — extra time, colour overlays, and timed rest breaks — before the real thing.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="signin-section" id="sign-in">
+    <div class="signin-inner">
+      <h2>Get started</h2>
+      <p class="signin-desc">Sign in with your name to start marking and keep your history.</p>
+      <div class="card">
+        <form id="authForm">
+          <div class="auth-field">
+            <label for="authName">Username</label>
+            <input type="text" id="authName" placeholder="e.g. Jordan" required autocomplete="username" />
+          </div>
+          <div class="auth-field">
+            <label for="authPassword">Password</label>
+            <input type="password" id="authPassword" placeholder="Same as your username" required autocomplete="current-password" />
+          </div>
+          <button type="submit" class="submit" id="authSubmitBtn">Sign in</button>
+          <div class="error" id="authError"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">Paramark — AI exam marking for educators</footer>
 </div>
 
+<!-- ============ MAIN APP ============ -->
+<div id="appScreen" style="display:none;">
+  <header class="site-header">
+    <div class="site-logo">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 2L3 7v8l8 5 8-5V7L11 2z" stroke="#00C805" stroke-width="1.8" fill="none"/><path d="M8 11l2.5 2.5L14.5 9" stroke="#00C805" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Paramark
+    </div>
+    <div class="account-chip">
+      <span class="name" id="userName"></span>
+      <button class="link-btn" id="signOutBtn">Switch user</button>
+    </div>
+  </header>
+
+  <div class="app-wrap">
+    <div class="app-intro">
+      <div class="tagline" id="tagline">Type it or upload it — question, mark scheme, and answer, in text, image, or PDF.</div>
+    </div>
+
+    <nav class="app-tabs" aria-label="Main">
+      <button type="button" class="active" data-tab="mark" id="tabMark">Mark answers</button>
+      <button type="button" data-tab="practice" id="tabPractice">Practice exam</button>
+    </nav>
+
+    <!-- ============ MARK ANSWERS TAB ============ -->
+    <div id="markPanel" class="tab-panel">
+      <form id="markForm" class="card">
+        <div class="field" data-group="question">
+          <div class="field-head">
+            <label class="field-label">Question(s)</label>
+            <div class="segmented" data-toggle="question">
+              <button type="button" class="active" data-mode="text">Type it</button>
+              <button type="button" data-mode="file">Upload file(s)</button>
+            </div>
+          </div>
+          <textarea class="mode-text" placeholder="e.g. How is GDP calculated and what does it indicate?"></textarea>
+          <div class="dropzone mode-file" tabindex="0" role="button" style="display:none" aria-label="Upload one or more images or PDFs of the question paper">
+            <span class="dz-text">Drag file(s) here, or click to choose — add every page if the paper spans several</span>
+            <div class="dz-hint hint">Image or PDF, multiple allowed</div>
+            <input type="file" accept="image/*,application/pdf" multiple style="display:none" />
+            <div class="dz-preview"></div>
+          </div>
+        </div>
+
+        <div class="field" data-group="markScheme">
+          <div class="field-head">
+            <label class="field-label">Mark scheme</label>
+            <div class="segmented" data-toggle="markScheme">
+              <button type="button" class="active" data-mode="text">Type it</button>
+              <button type="button" data-mode="file">Upload file(s)</button>
+            </div>
+          </div>
+          <textarea class="mode-text" placeholder="e.g. 1 mark: production, income, expenditure methods. 2 marks: explains GDP as an indicator of economic wellbeing."></textarea>
+          <div class="dropzone mode-file" tabindex="0" role="button" style="display:none" aria-label="Upload one or more images or PDFs of the mark scheme">
+            <span class="dz-text">Drag file(s) here, or click to choose — add every page if the scheme spans several</span>
+            <div class="dz-hint hint">Image or PDF, multiple allowed</div>
+            <input type="file" accept="image/*,application/pdf" multiple style="display:none" />
+            <div class="dz-preview"></div>
+          </div>
+        </div>
+
+        <div class="field" data-group="answer">
+          <div class="field-head">
+            <label class="field-label">Student's answer(s)</label>
+            <div class="segmented" data-toggle="answer">
+              <button type="button" data-mode="text">Type it</button>
+              <button type="button" class="active" data-mode="file">Upload file(s)</button>
+            </div>
+          </div>
+          <textarea class="mode-text" style="display:none" placeholder="Type or paste the student's answer here..."></textarea>
+          <div class="dropzone mode-file" tabindex="0" role="button" aria-label="Upload one or more images or PDFs of the student's answers">
+            <span class="dz-text">Drag file(s) here, or click to choose — add a photo for every page</span>
+            <div class="dz-hint hint">Image or PDF, multiple allowed — handwritten answers work best as clear photos</div>
+            <input type="file" accept="image/*,application/pdf" multiple style="display:none" />
+            <div class="dz-preview"></div>
+          </div>
+        </div>
+
+        <button type="submit" class="submit" id="submitBtn">Mark this</button>
+        <div class="error" id="errorMsg"></div>
+        <div class="loading" id="loading"><span class="bars"><span></span><span></span><span></span></span>Grading in progress</div>
+      </form>
+
+      <div class="results" id="results">
+        <div class="score-card">
+          <div class="ring-wrap">
+            <svg viewBox="0 0 108 108">
+              <circle class="ring-track" cx="54" cy="54" r="46" />
+              <circle class="ring-fill" id="ringFill" cx="54" cy="54" r="46" />
+            </svg>
+            <div class="ring-num"><span class="n" id="scoreNum">0</span><span class="d" id="scoreMax">/ 0</span></div>
+          </div>
+          <div class="score-summary">
+            <div class="label">Feedback</div>
+            <div class="feedback" id="overallFeedback"></div>
+          </div>
+        </div>
+        <div id="questionsList"></div>
+        <details class="ocr" id="ocrDetails">
+          <summary>What we read from the handwriting</summary>
+          <pre id="ocrText"></pre>
+        </details>
+      </div>
+
+      <div class="history-section">
+        <div class="history-head"><h2>Progress over time</h2></div>
+        <div id="progressChartWrap" class="progress-chart-wrap" style="display:none;"></div>
+        <div class="history-head"><h2>Past marks</h2></div>
+        <div id="historyList"></div>
+      </div>
+    </div>
+
+    <!-- ============ PRACTICE EXAM TAB ============ -->
+    <div id="practicePanel" class="tab-panel" hidden>
+
+      <section id="setupPanel" class="card">
+        <div class="field">
+          <label class="field-label">Exam paper</label>
+          <div id="examDropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload an image or PDF of the exam paper">
+            <span class="dz-text">Drag your exam paper here, or click to choose one</span>
+            <div class="hint">Image or PDF</div>
+            <input type="file" accept="image/*,application/pdf" style="display:none" />
+            <div class="dz-preview"></div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label class="field-label" for="durationMinutes">Exam duration (minutes)</label>
+            <input type="number" id="durationMinutes" min="1" max="600" value="90" placeholder="e.g. 90" />
+            <div class="field-hint">Standard time before extra time is applied.</div>
+          </div>
+          <div class="field">
+            <label class="field-label" for="extraTimePercent">Extra time (%)</label>
+            <input type="number" id="extraTimePercent" min="0" max="200" value="25" placeholder="e.g. 25" />
+            <div class="field-hint">Common access arrangement — 25% adds a quarter more time.</div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label class="field-label" for="breakDuration">Rest break length (minutes)</label>
+            <input type="number" id="breakDuration" min="0" max="60" value="5" placeholder="e.g. 5" />
+            <div class="field-hint">How long each rest break lasts. Set to 0 to disable breaks.</div>
+          </div>
+          <div class="field">
+            <label class="field-label" for="autoBreakEvery">Auto-break every (minutes)</label>
+            <input type="number" id="autoBreakEvery" min="0" max="180" value="0" placeholder="0 = manual only" />
+            <div class="field-hint">Optional — automatically pause for a break at this interval.</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label">Colour overlay</label>
+          <div class="overlay-picker" role="group" aria-label="Colour overlay selection">
+            <button type="button" class="overlay-swatch off active" data-color="off">Off</button>
+            <button type="button" class="overlay-swatch yellow" data-color="yellow">Yellow</button>
+            <button type="button" class="overlay-swatch blue" data-color="blue">Blue</button>
+            <button type="button" class="overlay-swatch green" data-color="green">Green</button>
+          </div>
+          <div class="field-hint">Simulates coloured acetate overlays used in exam access arrangements.</div>
+        </div>
+
+        <button type="button" class="submit" id="startExamBtn">Start practice exam</button>
+        <div class="error" id="setupError"></div>
+      </section>
+
+      <section id="finishedPanel" class="finished-panel">
+        <div class="finished-card">
+          <h2>Exam complete</h2>
+          <p>Your practice session has ended.</p>
+          <div class="finished-stats">
+            <div class="stat-item">
+              <div class="stat-val" id="statTimeUsed">00:00</div>
+              <div class="stat-lbl">Time used</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-val" id="statBreaks">0</div>
+              <div class="stat-lbl">Rest breaks</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-val" id="statOverlay">None</div>
+              <div class="stat-lbl">Overlay</div>
+            </div>
+          </div>
+          <button type="button" class="submit" id="newExamBtn">Start another exam</button>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<!-- Full-screen exam shell: hidden until "Start practice exam" is clicked -->
+<div id="examShell" class="exam-shell" aria-hidden="true">
+  <div class="exam-toolbar">
+    <div class="timer-block">
+      <span class="timer-label">Time remaining</span>
+      <span class="timer-display" id="timerDisplay">00:00</span>
+      <span class="timer-meta" id="timerMeta"></span>
+    </div>
+    <div class="timer-block">
+      <span class="timer-label">Rest breaks</span>
+      <span class="timer-display" id="breakCounter">0</span>
+    </div>
+    <div class="toolbar-actions">
+      <div class="overlay-toggle" role="group" aria-label="Change colour overlay during exam">
+        <button type="button" data-color="off" class="active" title="No overlay" aria-label="No overlay"></button>
+        <button type="button" data-color="yellow" title="Yellow overlay" aria-label="Yellow overlay"></button>
+        <button type="button" data-color="blue" title="Blue overlay" aria-label="Blue overlay"></button>
+        <button type="button" data-color="green" title="Green overlay" aria-label="Green overlay"></button>
+      </div>
+      <button type="button" class="secondary" id="takeBreakBtn">Take a break</button>
+      <button type="button" class="secondary" id="endExamBtn">End exam</button>
+    </div>
+  </div>
+  <div class="exam-viewport">
+    <div id="examPaperWrap" class="exam-paper-wrap">
+      <div id="colorOverlay" class="color-overlay"></div>
+    </div>
+  </div>
+</div>
+
+<div id="breakModal" class="break-modal" role="dialog" aria-modal="true" aria-labelledby="breakTitle">
+  <div class="break-card">
+    <h2 id="breakTitle">Rest break</h2>
+    <p id="breakMessage">Step away from the screen and rest your eyes.</p>
+    <div class="break-timer" id="breakTimer">05:00</div>
+    <button type="button" class="submit" id="resumeBtn">Resume exam</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
   const API_BASE = "http://localhost:8000"; // swap for your Cloud Run URL once deployed
   const DUMMY_PASSWORD = "leafhacks26-demo-password"; // never shown to the user - just satisfies the backend's real auth
 
   const FILE_ICON = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>`;
 
-  // ---------------- Dummy auth ----------------
+  if (window.pdfjsLib) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+
+  // ================================================================
+  // AUTH (dummy - name + any password, backed by real /signup /login)
+  // ================================================================
   const authScreen = document.getElementById('authScreen');
   const appScreen = document.getElementById('appScreen');
   const authForm = document.getElementById('authForm');
@@ -439,7 +995,6 @@
   const authSubmitBtn = document.getElementById('authSubmitBtn');
 
   let sessionToken = null;
-  let sessionName = null;
 
   function nameToEmail(name) {
     const slug = name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
@@ -456,13 +1011,12 @@
       res = await fetch(`${API_BASE}/signup`, { method: 'POST', headers, body });
     }
     if (!res.ok) throw new Error("Couldn't continue with that name — try a different one.");
-    return res.json(); // { token, email }
+    return res.json();
   }
 
   function enterApp(name, token) {
-    sessionName = name;
     sessionToken = token;
-    localStorage.setItem('markup_session', JSON.stringify({ name, token }));
+    localStorage.setItem('paramark_session', JSON.stringify({ name, token }));
     authScreen.style.display = 'none';
     appScreen.style.display = 'block';
     document.getElementById('userName').textContent = name;
@@ -495,17 +1049,15 @@
   });
 
   document.getElementById('signOutBtn').addEventListener('click', () => {
-    localStorage.removeItem('markup_session');
+    localStorage.removeItem('paramark_session');
     sessionToken = null;
-    sessionName = null;
     authForm.reset();
     authScreen.style.display = 'block';
     appScreen.style.display = 'none';
   });
 
-  // Restore session on page load, if there is one
   (function restoreSession() {
-    const saved = localStorage.getItem('markup_session');
+    const saved = localStorage.getItem('paramark_session');
     if (saved) {
       try {
         const { name, token } = JSON.parse(saved);
@@ -518,8 +1070,30 @@
     return { Authorization: `Bearer ${sessionToken}` };
   }
 
-  // ---------------- Marking form ----------------
-  document.querySelectorAll('.segmented[data-toggle]').forEach(seg => {
+  // ================================================================
+  // TAB SWITCHING
+  // ================================================================
+  const TAGLINES = {
+    mark: "Type it or upload it — question, mark scheme, and answer, in text, image, or PDF.",
+    practice: "Practice exam mode — simulate colour overlays, extra time, and rest breaks while you work through a paper.",
+  };
+
+  function switchTab(tab) {
+    document.getElementById('markPanel').hidden = tab !== 'mark';
+    document.getElementById('practicePanel').hidden = tab !== 'practice';
+    document.getElementById('tagline').textContent = TAGLINES[tab];
+    document.querySelectorAll('.site-nav button').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tab === tab);
+    });
+  }
+  document.querySelectorAll('.site-nav button').forEach(btn => {
+    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+  });
+
+  // ================================================================
+  // MARK ANSWERS TAB
+  // ================================================================
+  document.querySelectorAll('#markPanel .segmented').forEach(seg => {
     const group = seg.closest('.field');
     seg.querySelectorAll('button').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -532,10 +1106,7 @@
     });
   });
 
-  const fileState = {};
-
-  document.querySelectorAll('.dropzone').forEach(dz => {
-    const group = dz.closest('.field').dataset.group;
+  function wireDropzone(dz, onFile) {
     const input = dz.querySelector('input[type="file"]');
     const textEl = dz.querySelector('.dz-text');
     const previewEl = dz.querySelector('.dz-preview');
@@ -544,11 +1115,11 @@
     dz.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
     ['dragover', 'dragenter'].forEach(evt => dz.addEventListener(evt, (e) => { e.preventDefault(); dz.classList.add('dragover'); }));
     ['dragleave', 'drop'].forEach(evt => dz.addEventListener(evt, (e) => { e.preventDefault(); dz.classList.remove('dragover'); }));
-    dz.addEventListener('drop', (e) => { const f = e.dataTransfer.files[0]; if (f) setFile(f); });
-    input.addEventListener('change', () => { if (input.files[0]) setFile(input.files[0]); });
+    dz.addEventListener('drop', (e) => { const f = e.dataTransfer.files[0]; if (f) handle(f); });
+    input.addEventListener('change', () => { if (input.files[0]) handle(input.files[0]); });
 
-    function setFile(file) {
-      fileState[group] = file;
+    function handle(file) {
+      onFile(file);
       textEl.textContent = file.name;
       if (file.type === 'application/pdf') {
         previewEl.innerHTML = `<div class="file-chip">${FILE_ICON}<span>${file.name}</span></div>`;
@@ -558,9 +1129,85 @@
         reader.readAsDataURL(file);
       }
     }
+  }
+
+  // Multi-file dropzone: keeps an array of files per field (question/markScheme/answer),
+  // supports adding more via repeated selection or drag-drop, and lets the user remove
+  // individual files before submitting - needed for papers spread across several pages.
+  const fileState = { question: [], markScheme: [], answer: [] };
+
+  function wireMultiDropzone(dz, groupKey) {
+    const input = dz.querySelector('input[type="file"]');
+    const textEl = dz.querySelector('.dz-text');
+    const previewEl = dz.querySelector('.dz-preview');
+    const defaultText = textEl.textContent;
+
+    dz.addEventListener('click', () => input.click());
+    dz.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); } });
+    ['dragover', 'dragenter'].forEach(evt => dz.addEventListener(evt, (e) => { e.preventDefault(); dz.classList.add('dragover'); }));
+    ['dragleave', 'drop'].forEach(evt => dz.addEventListener(evt, (e) => { e.preventDefault(); dz.classList.remove('dragover'); }));
+    dz.addEventListener('drop', (e) => { addFiles(Array.from(e.dataTransfer.files)); });
+    input.addEventListener('change', () => { addFiles(Array.from(input.files)); input.value = ''; });
+
+    function addFiles(files) {
+      fileState[groupKey].push(...files);
+      renderList();
+    }
+
+    function removeFile(index) {
+      fileState[groupKey].splice(index, 1);
+      renderList();
+    }
+
+    function renderList() {
+      const files = fileState[groupKey];
+      if (files.length === 0) {
+        textEl.textContent = defaultText;
+        previewEl.innerHTML = '';
+        return;
+      }
+      textEl.textContent = `${files.length} file${files.length > 1 ? 's' : ''} added — click to add more`;
+      previewEl.innerHTML = `<div class="file-chip-list"></div>`;
+      const listEl = previewEl.querySelector('.file-chip-list');
+
+      files.forEach((file, i) => {
+        const row = document.createElement('div');
+        row.className = 'file-chip-row';
+
+        if (file.type === 'application/pdf') {
+          row.innerHTML = `<span class="fc-icon">${FILE_ICON}</span><span class="fc-name">${escapeHtml(file.name)}</span>`;
+        } else {
+          const img = document.createElement('img');
+          img.alt = '';
+          const reader = new FileReader();
+          reader.onload = (e) => { img.src = e.target.result; };
+          reader.readAsDataURL(file);
+          row.appendChild(img);
+          const nameSpan = document.createElement('span');
+          nameSpan.className = 'fc-name';
+          nameSpan.textContent = file.name;
+          row.appendChild(nameSpan);
+        }
+
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'fc-remove';
+        removeBtn.setAttribute('aria-label', `Remove ${file.name}`);
+        removeBtn.textContent = '✕';
+        removeBtn.addEventListener('click', (e) => { e.stopPropagation(); removeFile(i); });
+        row.appendChild(removeBtn);
+
+        listEl.appendChild(row);
+      });
+    }
+  }
+
+  document.querySelectorAll('#markPanel .dropzone').forEach(dz => {
+    const group = dz.closest('.field').dataset.group;
+    wireMultiDropzone(dz, group);
   });
 
-  const form = document.getElementById('markForm');
+  const markForm = document.getElementById('markForm');
   const submitBtn = document.getElementById('submitBtn');
   const loading = document.getElementById('loading');
   const results = document.getElementById('results');
@@ -570,10 +1217,10 @@
     return document.querySelector(`.segmented[data-toggle="${name}"] button.active`).dataset.mode;
   }
   function textValueOf(name) {
-    return form.querySelector(`[data-group="${name}"] textarea`).value.trim();
+    return markForm.querySelector(`[data-group="${name}"] textarea`).value.trim();
   }
 
-  form.addEventListener('submit', async (e) => {
+  markForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     errorMsg.style.display = 'none';
     results.style.display = 'none';
@@ -582,15 +1229,21 @@
     const labels = { question: 'the question', markScheme: 'the mark scheme', answer: "the student's answer" };
 
     for (const key of ['question', 'markScheme', 'answer']) {
-      if (modes[key] === 'text' && !textValueOf(key)) return showError(`Add ${labels[key]} — type it or switch to upload a file.`);
-      if (modes[key] === 'file' && !fileState[key]) return showError(`Upload a file for ${labels[key]}, or switch to type it.`);
+      if (modes[key] === 'text' && !textValueOf(key)) return showError(`Add ${labels[key]} — type it or switch to upload file(s).`);
+      if (modes[key] === 'file' && fileState[key].length === 0) return showError(`Upload at least one file for ${labels[key]}, or switch to type it.`);
     }
 
     const formData = new FormData();
-    formData.append('total_marks', document.getElementById('totalMarks').value);
-    formData.append(modes.question === 'text' ? 'question_text' : 'question_file', modes.question === 'text' ? textValueOf('question') : fileState.question);
-    formData.append(modes.markScheme === 'text' ? 'mark_scheme_text' : 'mark_scheme_file', modes.markScheme === 'text' ? textValueOf('markScheme') : fileState.markScheme);
-    formData.append(modes.answer === 'text' ? 'answer_text' : 'answer_file', modes.answer === 'text' ? textValueOf('answer') : fileState.answer);
+
+    const fieldNames = { question: 'question', markScheme: 'mark_scheme', answer: 'answer' };
+    for (const key of ['question', 'markScheme', 'answer']) {
+      const apiName = fieldNames[key];
+      if (modes[key] === 'text') {
+        formData.append(`${apiName}_text`, textValueOf(key));
+      } else {
+        fileState[key].forEach(file => formData.append(`${apiName}_files`, file));
+      }
+    }
 
     submitBtn.disabled = true;
     loading.style.display = 'block';
@@ -605,7 +1258,7 @@
       renderResults(data);
       loadHistory();
     } catch (err) {
-      showError(err.message || "Couldn't mark that answer — check your files are clear and the server is running, then try again.");
+      showError(err.message || "Couldn't mark this — check your files are clear and the server is running, then try again.");
     } finally {
       submitBtn.disabled = false;
       loading.style.display = 'none';
@@ -627,9 +1280,9 @@
     ring.style.transition = 'stroke-dashoffset 0.8s ease-out';
     requestAnimationFrame(() => { ring.style.strokeDashoffset = `${circumference * (1 - fraction)}`; });
 
-    const list = document.getElementById('breakdownList');
+    const list = document.getElementById('questionsList');
     list.innerHTML = '';
-    (data.breakdown || []).forEach(item => list.appendChild(breakdownRow(item)));
+    (data.questions || []).forEach(q => list.appendChild(questionBlock(q)));
 
     document.getElementById('overallFeedback').textContent = data.overall_feedback || '';
 
@@ -643,6 +1296,35 @@
 
     results.style.display = 'block';
     results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Renders one question's card: label, score, per-criterion breakdown, and feedback.
+  // Shared between live results and expanded history entries.
+  function questionBlock(q) {
+    const block = document.createElement('div');
+    block.className = 'question-block';
+
+    const head = document.createElement('div');
+    head.className = 'question-head';
+    head.innerHTML = `
+      <span class="question-label">${escapeHtml(q.question_label || 'Question')}</span>
+      <span class="question-score">${q.score}/${q.max_score}</span>
+    `;
+    block.appendChild(head);
+
+    const breakdownEl = document.createElement('div');
+    breakdownEl.className = 'breakdown';
+    (q.breakdown || []).forEach(item => breakdownEl.appendChild(breakdownRow(item)));
+    block.appendChild(breakdownEl);
+
+    if (q.feedback) {
+      const feedbackEl = document.createElement('div');
+      feedbackEl.className = 'question-feedback';
+      feedbackEl.textContent = q.feedback;
+      block.appendChild(feedbackEl);
+    }
+
+    return block;
   }
 
   function breakdownRow(item) {
@@ -670,10 +1352,17 @@
     return div.innerHTML;
   }
 
-  // ---------------- History ----------------
+  // Maps a history entry's index (same order as the API response, most
+  // recent first) to its {row, detail} DOM elements, so chart points can
+  // jump straight to and expand the matching entry.
+  let historyRowRefs = [];
+
   async function loadHistory() {
     const listEl = document.getElementById('historyList');
+    const chartWrap = document.getElementById('progressChartWrap');
     listEl.innerHTML = `<div class="history-empty">Loading…</div>`;
+    historyRowRefs = [];
+
     try {
       const res = await fetch(`${API_BASE}/history`, { headers: authHeader() });
       if (!res.ok) throw new Error();
@@ -682,6 +1371,7 @@
 
       if (items.length === 0) {
         listEl.innerHTML = `<div class="history-empty">No marked answers yet — your results will show up here.</div>`;
+        chartWrap.style.display = 'none';
         return;
       }
 
@@ -699,8 +1389,8 @@
         `;
 
         const detail = document.createElement('div');
-        detail.className = 'history-detail breakdown';
-        (item.breakdown || []).forEach(b => detail.appendChild(breakdownRow(b)));
+        detail.className = 'history-detail';
+        (item.breakdown || []).forEach(q => detail.appendChild(questionBlock(q)));
 
         row.addEventListener('click', () => {
           detail.style.display = detail.style.display === 'block' ? 'none' : 'block';
@@ -708,11 +1398,361 @@
 
         listEl.appendChild(row);
         listEl.appendChild(detail);
+        historyRowRefs.push({ row, detail });
       });
+
+      renderProgressChart(items);
     } catch {
       listEl.innerHTML = `<div class="history-empty">Couldn't load your history right now.</div>`;
+      chartWrap.style.display = 'none';
     }
   }
+
+  // Draws a simple SVG line chart of score percentage per attempt, oldest
+  // to newest left-to-right. Each point is clickable and keyboard-focusable;
+  // activating one scrolls to and expands the matching entry in the list
+  // below via jumpToHistoryItem.
+  function renderProgressChart(items) {
+    const chartWrap = document.getElementById('progressChartWrap');
+
+    if (items.length < 2) {
+      chartWrap.style.display = 'block';
+      chartWrap.innerHTML = `<div class="progress-empty">Mark a few more answers to see your progress charted here.</div>`;
+      return;
+    }
+
+    chartWrap.style.display = 'block';
+
+    // items[] is most-recent-first (from the API); chart reads left-to-right
+    // oldest-to-newest, so reverse it just for plotting.
+    const chronological = [...items].reverse();
+
+    const W = 600, H = 160, padX = 20, padY = 18;
+    const n = chronological.length;
+    const xStep = (W - padX * 2) / (n - 1);
+
+    const points = chronological.map((item, i) => {
+      const pct = item.max_score > 0 ? (item.total_score / item.max_score) * 100 : 0;
+      const x = padX + i * xStep;
+      const y = H - padY - (pct / 100) * (H - padY * 2);
+      const originalIndex = items.length - 1 - i; // map back to the descending items[]/historyRowRefs order
+      return { x, y, pct, item, originalIndex };
+    });
+
+    const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+
+    const circles = points.map(p => {
+      const date = p.item.created_at ? new Date(p.item.created_at).toLocaleDateString() : '';
+      const pctLabel = Math.round(p.pct);
+      return `
+        <circle class="progress-point" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="5"
+          data-index="${p.originalIndex}" tabindex="0" role="button"
+          aria-label="View result from ${date}, ${pctLabel} percent">
+          <title>${date} — ${pctLabel}%</title>
+        </circle>`;
+    }).join('');
+
+    chartWrap.innerHTML = `
+      <svg viewBox="0 0 ${W} ${H}" class="progress-svg" preserveAspectRatio="none">
+        <line x1="${padX}" y1="${H - padY}" x2="${W - padX}" y2="${H - padY}" class="progress-axis" />
+        <path d="${pathD}" class="progress-line" />
+        ${circles}
+      </svg>
+    `;
+
+    chartWrap.querySelectorAll('.progress-point').forEach(circle => {
+      const jump = () => jumpToHistoryItem(parseInt(circle.dataset.index, 10));
+      circle.addEventListener('click', jump);
+      circle.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); jump(); }
+      });
+    });
+  }
+
+  function jumpToHistoryItem(index) {
+    const ref = historyRowRefs[index];
+    if (!ref) return;
+    ref.detail.style.display = 'block';
+    ref.row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    ref.row.classList.add('highlight');
+    setTimeout(() => ref.row.classList.remove('highlight'), 1200);
+  }
+
+  // ================================================================
+  // PRACTICE EXAM TAB — built from scratch
+  // ================================================================
+  const setupPanel = document.getElementById('setupPanel');
+  const finishedPanel = document.getElementById('finishedPanel');
+  const examShell = document.getElementById('examShell');
+  const examPaperWrap = document.getElementById('examPaperWrap');
+  const colorOverlayEl = document.getElementById('colorOverlay');
+  const timerDisplay = document.getElementById('timerDisplay');
+  const timerMeta = document.getElementById('timerMeta');
+  const breakModal = document.getElementById('breakModal');
+  const breakTimerEl = document.getElementById('breakTimer');
+  const breakCounterEl = document.getElementById('breakCounter');
+  const setupError = document.getElementById('setupError');
+  const examDropzone = document.getElementById('examDropzone');
+
+  const OVERLAY_COLORS = {
+    off: 'transparent',
+    yellow: 'rgba(250, 204, 21, 0.28)',
+    blue: 'rgba(59, 130, 246, 0.24)',
+    green: 'rgba(74, 222, 128, 0.24)',
+  };
+  const OVERLAY_LABELS = { off: 'None', yellow: 'Yellow', blue: 'Blue', green: 'Green' };
+
+  let examPaperFile = null;
+  let selectedOverlay = 'off';
+  let exam = null; // null when no practice exam is running
+
+  wireDropzone(examDropzone, (file) => { examPaperFile = file; });
+
+  document.querySelectorAll('#setupPanel .overlay-swatch').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#setupPanel .overlay-swatch').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedOverlay = btn.dataset.color;
+    });
+  });
+
+  document.querySelectorAll('.overlay-toggle button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.overlay-toggle button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedOverlay = btn.dataset.color;
+      applyOverlay();
+    });
+  });
+
+  function applyOverlay() {
+    colorOverlayEl.style.background = OVERLAY_COLORS[selectedOverlay] || 'transparent';
+  }
+
+  function formatTime(totalSeconds) {
+    totalSeconds = Math.max(0, Math.round(totalSeconds));
+    const h = Math.floor(totalSeconds / 3600);
+    const m = Math.floor((totalSeconds % 3600) / 60);
+    const s = totalSeconds % 60;
+    const pad = (n) => String(n).padStart(2, '0');
+    return h > 0 ? `${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
+  }
+
+  async function renderExamPaper(file) {
+    examPaperWrap.innerHTML = '';
+    examPaperWrap.appendChild(colorOverlayEl); // keep the overlay div, re-attach after clearing
+
+    if (file.type === 'application/pdf') {
+      const buf = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const viewport = page.getViewport({ scale: 1.5 });
+        const canvas = document.createElement('canvas');
+        canvas.className = 'exam-page-canvas';
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+        examPaperWrap.appendChild(canvas);
+      }
+    } else {
+      const img = document.createElement('img');
+      img.src = URL.createObjectURL(file);
+      img.alt = 'Exam paper';
+      examPaperWrap.appendChild(img);
+    }
+
+    syncOverlayHeight();
+    if (overlayResizeObserver) overlayResizeObserver.observe(examPaperWrap);
+  }
+
+  // Keeps the colour overlay's height locked to the paper's actual
+  // rendered height at all times - covers every page of a multi-page
+  // PDF, and re-syncs automatically if the layout reflows (e.g. an
+  // image finishing its load, or the window being resized).
+  let overlayResizeObserver = null;
+  function syncOverlayHeight() {
+    colorOverlayEl.style.height = `${examPaperWrap.scrollHeight}px`;
+  }
+  if (window.ResizeObserver) {
+    overlayResizeObserver = new ResizeObserver(() => syncOverlayHeight());
+    overlayResizeObserver.observe(examPaperWrap);
+  } else {
+    window.addEventListener('resize', syncOverlayHeight);
+  }
+
+  document.getElementById('startExamBtn').addEventListener('click', async () => {
+    setupError.style.display = 'none';
+
+    if (!examPaperFile) {
+      setupError.textContent = 'Upload an exam paper before starting.';
+      setupError.style.display = 'block';
+      return;
+    }
+
+    const durationMin = parseFloat(document.getElementById('durationMinutes').value) || 0;
+    const extraPct = parseFloat(document.getElementById('extraTimePercent').value) || 0;
+    const breakMin = parseFloat(document.getElementById('breakDuration').value) || 0;
+    const autoBreakMin = parseFloat(document.getElementById('autoBreakEvery').value) || 0;
+
+    if (durationMin <= 0) {
+      setupError.textContent = 'Set an exam duration greater than 0.';
+      setupError.style.display = 'block';
+      return;
+    }
+
+    const totalSeconds = Math.round(durationMin * 60 * (1 + extraPct / 100));
+
+    exam = {
+      totalSeconds,
+      remainingSeconds: totalSeconds,
+      breaksTaken: 0,
+      breakDurationSec: Math.round(breakMin * 60),
+      autoBreakEverySec: autoBreakMin > 0 ? Math.round(autoBreakMin * 60) : 0,
+      secondsSinceLastAutoBreak: 0,
+      overlayColor: selectedOverlay,
+      onBreak: false,
+      breakRemainingSec: 0,
+      intervalId: null,
+      breakIntervalId: null,
+    };
+
+    timerMeta.textContent = extraPct > 0 ? `Includes ${extraPct}% extra time` : '';
+    breakCounterEl.textContent = '0';
+    applyOverlay();
+
+    await renderExamPaper(examPaperFile);
+
+    // Disable tab switching while a practice exam is in progress
+    document.querySelectorAll('.site-nav button').forEach(b => b.disabled = true);
+
+    // The exam shell — and the timer inside it — only become visible here,
+    // right before the countdown interval is created. Nothing before this
+    // point ever shows the shell or starts a timer.
+    timerDisplay.textContent = formatTime(exam.remainingSeconds);
+    timerDisplay.classList.remove('low-time');
+    examShell.classList.add('active');
+    examShell.setAttribute('aria-hidden', 'false');
+
+    exam.intervalId = setInterval(tickExam, 1000);
+  });
+
+  function tickExam() {
+    if (!exam || exam.onBreak) return;
+
+    exam.remainingSeconds -= 1;
+    exam.secondsSinceLastAutoBreak += 1;
+
+    timerDisplay.textContent = formatTime(exam.remainingSeconds);
+    timerDisplay.classList.toggle('low-time', exam.remainingSeconds <= 60 && exam.remainingSeconds > 0);
+
+    if (exam.autoBreakEverySec > 0 && exam.secondsSinceLastAutoBreak >= exam.autoBreakEverySec && exam.remainingSeconds > 0) {
+      exam.secondsSinceLastAutoBreak = 0;
+      startBreak();
+      return;
+    }
+
+    if (exam.remainingSeconds <= 0) {
+      finishExam();
+    }
+  }
+
+  function startBreak() {
+    if (!exam || exam.breakDurationSec <= 0) return;
+    exam.onBreak = true;
+    exam.breaksTaken += 1;
+    breakCounterEl.textContent = String(exam.breaksTaken);
+    exam.breakRemainingSec = exam.breakDurationSec;
+    breakTimerEl.textContent = formatTime(exam.breakRemainingSec);
+    breakModal.classList.add('active');
+
+    exam.breakIntervalId = setInterval(() => {
+      exam.breakRemainingSec -= 1;
+      breakTimerEl.textContent = formatTime(exam.breakRemainingSec);
+      if (exam.breakRemainingSec <= 0) endBreak();
+    }, 1000);
+  }
+
+  function endBreak() {
+    if (!exam) return;
+    clearInterval(exam.breakIntervalId);
+    exam.onBreak = false;
+    breakModal.classList.remove('active');
+  }
+
+  document.getElementById('takeBreakBtn').addEventListener('click', () => {
+    if (exam && !exam.onBreak) startBreak();
+  });
+  document.getElementById('resumeBtn').addEventListener('click', endBreak);
+  document.getElementById('endExamBtn').addEventListener('click', () => { if (exam) finishExam(); });
+
+  function finishExam() {
+    if (!exam) return;
+    clearInterval(exam.intervalId);
+    if (exam.breakIntervalId) clearInterval(exam.breakIntervalId);
+    breakModal.classList.remove('active');
+    if (overlayResizeObserver) overlayResizeObserver.disconnect();
+
+    const timeUsedSec = exam.totalSeconds - Math.max(exam.remainingSeconds, 0);
+    document.getElementById('statTimeUsed').textContent = formatTime(timeUsedSec);
+    document.getElementById('statBreaks').textContent = String(exam.breaksTaken);
+    document.getElementById('statOverlay').textContent = OVERLAY_LABELS[exam.overlayColor] || 'None';
+
+    examShell.classList.remove('active');
+    examShell.setAttribute('aria-hidden', 'true');
+    document.querySelectorAll('.site-nav button').forEach(b => b.disabled = false);
+
+    setupPanel.style.display = 'none';
+    finishedPanel.classList.add('active');
+
+    exam = null;
+  }
+
+  document.getElementById('newExamBtn').addEventListener('click', () => {
+    finishedPanel.classList.remove('active');
+    setupPanel.style.display = 'block';
+    setupError.style.display = 'none';
+    examPaperFile = null;
+    examDropzone.querySelector('.dz-text').textContent = 'Drag your exam paper here, or click to choose one';
+    examDropzone.querySelector('.dz-preview').innerHTML = '';
+  });
+
+</script>
+<script>
+  // Hero title typewriter: Improving -> Enhancing -> Advancing
+  (function initHeroTitle() {
+    const el = document.getElementById('heroWord');
+    if (!el) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const words = ['Improving', 'Enhancing', 'Advancing'];
+    let wi = 0;
+    let text = words[0];
+    let deleting = false;
+
+    function step() {
+      const target = words[wi];
+      if (!deleting) {
+        if (text.length < target.length) {
+          text = target.slice(0, text.length + 1);
+          el.textContent = text;
+          setTimeout(step, 85);
+        } else {
+          setTimeout(() => { deleting = true; step(); }, 2400);
+        }
+      } else if (text.length > 0) {
+        text = text.slice(0, -1);
+        el.textContent = text;
+        setTimeout(step, 55);
+      } else {
+        deleting = false;
+        wi = (wi + 1) % words.length;
+        setTimeout(step, 350);
+      }
+    }
+
+    setTimeout(() => { deleting = true; step(); }, 2400);
+  })();
 </script>
 </body>
 </html>
